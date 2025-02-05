@@ -1,0 +1,4 @@
+repository "The 5 little memories@sousa2007@cloud"
+  path "/"
+    br "/main"
+    co "/main"
