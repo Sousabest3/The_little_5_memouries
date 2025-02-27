@@ -11,12 +11,14 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 input;
     
-//private Animator animator;
+private Animator animator;
 
-//private void Awake()
-//{
-    //animator = GetComponent<Animator>();
-//}
+public LayerMask solidObjectsLayer;
+
+private void Awake()
+{
+    animator = GetComponent<Animator>();
+}
 
     private void Update()
     {
@@ -37,16 +39,19 @@ public class PlayerController : MonoBehaviour
 
             if (input != Vector2.zero)
             {
-               // animator.SetFloat("moveX", input.x);
-           // animator.SetFloat("moveY", input.y);
+               animator.SetFloat("MoveX", input.x);
+           animator.SetFloat("MoveY", input.y);
                 
                 var targetPos = transform.position;
                 targetPos.x += input.x;
                 targetPos.y += input.y;
 
+                if(IsWalkable(targetPos))
                 StartCoroutine(Move(targetPos));
             }
         }
+        animator.SetBool("IsMoving", isMoving);
+
     }
 
     IEnumerator Move(Vector3 targetPos)
@@ -60,5 +65,16 @@ public class PlayerController : MonoBehaviour
         transform.position = targetPos;
 
         isMoving = false;
+    }
+
+    private bool IsWalkable(Vector3 targetPos)
+    {
+        if(Physics2D.OverlapCircle(targetPos, 0.2f, solidObjectsLayer) != null)
+        {
+            return false;
+
+        }
+        return true;
+
     }
 }
