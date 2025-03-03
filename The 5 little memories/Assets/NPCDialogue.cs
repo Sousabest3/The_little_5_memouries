@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="CatDialogue", menuName = "NPC Dialogue")]
+[CreateAssetMenu(fileName ="NewNPCDialogue", menuName = "NPC Dialogue")]
 public class NPCDialogue : ScriptableObject
 {
     public string npcName;

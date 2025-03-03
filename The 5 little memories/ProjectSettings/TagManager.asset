@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -13,7 +14,7 @@ TagManager:
   - UI
   - 
   - SolidObjects
-  - 
+  - Interactable
   - 
   - 
   - 
@@ -41,12 +42,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Foreground
-    uniqueID: 1605202919
+  - name: Ground
+    uniqueID: 922005051
+    locked: 0
+  - name: Walkinfornt
+    uniqueID: 1083865555
+    locked: 0
+  - name: Collison
+    uniqueID: 2260664543
     locked: 0
   - name: Player
-    uniqueID: 1716191587
+    uniqueID: 2862733999
     locked: 0
-  - name: decor
-    uniqueID: 1757626581
+  - name: Walkbehind
+    uniqueID: 2076443775
+    locked: 0
+  - name: Decor
+    uniqueID: 3456349985
     locked: 0
