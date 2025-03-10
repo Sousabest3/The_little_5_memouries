@@ -17,6 +17,12 @@ MonoBehaviour:
   dialogueLines:
   - hello Mari
   - "Como est\xE1s?"
+  playerDialogueLines:
+  - 
+  - 
+  - gatito
+  - gatito
+  isPlayerSpeaking: 00000101
   typingSpeed: 0.05
   voiceSound: {fileID: 0}
   voicePitch: 1

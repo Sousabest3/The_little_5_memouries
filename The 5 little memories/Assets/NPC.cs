@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine.UI;
 
 public class NPC : MonoBehaviour, IInteractable
 {
-  public NPCDialogue dialogueData;
-  public GameObject dialoguePanel;
-  public TMP_Text dialogueText, nameText;
-  public Image portraitImage;
+    public NPCDialogue dialogueData;
+    public GameObject dialoguePanel;
+    public TMP_Text dialogueText, nameText;
+    public Image portraitImage;
+    public Sprite playerPortrait; // Retrato do jogador
+    public PlayerMovement playerMovement; // Referência ao script de movimento do jogador
 
-  private int dialogueIndex;
-  private bool isTyping, isDialogueActive;
+    private int dialogueIndex;
+    private bool isTyping, isDialogueActive;
 
     public bool CanInteract()
     {
@@ -22,10 +23,10 @@ public class NPC : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if(dialogueData == null || (PauseController.IsGamePaused && !isDialogueActive))
-        return;
+        if (dialogueData == null || (PauseController.IsGamePaused && !isDialogueActive))
+            return;
 
-        if(isDialogueActive)
+        if (isDialogueActive)
         {
             NextLine();
         }
@@ -40,9 +41,13 @@ public class NPC : MonoBehaviour, IInteractable
         isDialogueActive = true;
         dialogueIndex = 0;
 
-        nameText.SetText(dialogueData.npcName);
-        portraitImage.sprite = dialogueData.npcPortrait;
+        // Bloqueia o movimento do jogador
+        if (playerMovement != null)
+        {
+            playerMovement.canMove = false;
+        }
 
+        UpdateDialogueUI();
         dialoguePanel.SetActive(true);
         PauseController.SetPause(true);
 
@@ -51,19 +56,20 @@ public class NPC : MonoBehaviour, IInteractable
 
     void NextLine()
     {
-        if(isTyping)
+        if (isTyping)
         {
-        StopAllCoroutines();
-        dialogueText.SetText(dialogueData.dialogueLines[dialogueIndex]);
-        isTyping = false;
+            StopAllCoroutines();
+            DisplayCurrentLineImmediately();
+            isTyping = false;
         }
-        else if(++dialogueIndex < dialogueData.dialogueLines.Length)
+        else if (++dialogueIndex < dialogueData.isPlayerSpeaking.Length)
         {
+            UpdateDialogueUI();
             StartCoroutine(Typeline());
         }
         else
         {
-          EndDialogue();  
+            EndDialogue();
         }
     }
 
@@ -72,19 +78,47 @@ public class NPC : MonoBehaviour, IInteractable
         isTyping = true;
         dialogueText.SetText("");
 
-        foreach(char letter in dialogueData.dialogueLines[dialogueIndex])
+        string currentLine = dialogueData.isPlayerSpeaking[dialogueIndex] ?
+            dialogueData.playerDialogueLines[dialogueIndex] :
+            dialogueData.dialogueLines[dialogueIndex];
+
+        foreach (char letter in currentLine)
         {
             dialogueText.text += letter;
-            yield return new WaitForSeconds( dialogueData.typingSpeed);
+            yield return new WaitForSeconds(dialogueData.typingSpeed);
         }
 
         isTyping = false;
 
-        if(dialogueData.autoProgressLines.Length > dialogueIndex && dialogueData.autoProgressLines[dialogueIndex])
+        // Avança automaticamente se configurado
+        if (dialogueData.autoProgressLines.Length > dialogueIndex && dialogueData.autoProgressLines[dialogueIndex])
         {
             yield return new WaitForSeconds(dialogueData.autoProgressDelay);
             NextLine();
-        } 
+        }
+    }
+
+    void UpdateDialogueUI()
+    {
+        if (dialogueData.isPlayerSpeaking[dialogueIndex])
+        {
+            nameText.SetText("Mari"); // Nome do jogador
+            portraitImage.sprite = playerPortrait; // Usa o retrato do jogador
+        }
+else
+        {
+            nameText.SetText(dialogueData.npcName);
+             portraitImage.sprite = dialogueData.npcPortrait;
+        }   
+    }
+
+    void DisplayCurrentLineImmediately()
+    {
+        string currentLine = dialogueData.isPlayerSpeaking[dialogueIndex] ?
+            dialogueData.playerDialogueLines[dialogueIndex] :
+            dialogueData.dialogueLines[dialogueIndex];
+
+        dialogueText.SetText(currentLine);
     }
 
     public void EndDialogue()
@@ -94,5 +128,11 @@ public class NPC : MonoBehaviour, IInteractable
         dialogueText.SetText("");
         dialoguePanel.SetActive(false);
         PauseController.SetPause(false);
+
+        // Libera o movimento do jogador
+        if (playerMovement != null)
+        {
+            playerMovement.canMove = true;
+        }
     }
 }

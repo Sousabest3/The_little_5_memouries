@@ -18,9 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Outside.unity
     guid: 410f21d21b61d8d42b88069f025ac132
   - enabled: 1
-    path: Assets/Scenes/florest 1.unity
+    path: Assets/Scenes/florest1.unity
     guid: 2a556ad90e53f47478fb95e27f3717c2
   - enabled: 1
-    path: Assets/Scenes/Florest 2.unity
+    path: Assets/Scenes/Florest2.unity
     guid: e79858363241ea04d9d353af087b02b0
   m_configObjects: {}
