@@ -10,7 +10,6 @@ public class NPC : MonoBehaviour, IInteractable
     public GameObject dialoguePanel;
     public TMP_Text dialogueText, nameText;
     public Image portraitImage;
-    public Sprite playerPortrait; // Retrato do jogador
     public PlayerMovement playerMovement; // Referência ao script de movimento do jogador
 
     private int dialogueIndex;
@@ -102,14 +101,14 @@ public class NPC : MonoBehaviour, IInteractable
     {
         if (dialogueData.isPlayerSpeaking[dialogueIndex])
         {
-            nameText.SetText("Mari"); // Nome do jogador
-            portraitImage.sprite = playerPortrait; // Usa o retrato do jogador
+            nameText.SetText("Player"); // Nome do jogador
+            portraitImage.sprite = null; // Ou adicione um retrato do jogador
         }
-else
+        else
         {
             nameText.SetText(dialogueData.npcName);
-             portraitImage.sprite = dialogueData.npcPortrait;
-        }   
+            portraitImage.sprite = dialogueData.npcPortrait;
+        }
     }
 
     void DisplayCurrentLineImmediately()

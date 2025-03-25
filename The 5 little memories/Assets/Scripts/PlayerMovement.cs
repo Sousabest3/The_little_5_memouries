@@ -19,6 +19,13 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if(PauseController.IsGamePaused)
+        {
+            rb.velocity = Vector2.zero;
+            animator.SetBool("isWalking", false);
+            return;
+        }
+        animator.SetBool("IsWalking", rb.velocity.magnitude > 0);
         if (canMove) // Só move se canMove for true
         {
             rb.velocity = moveInput * moveSpeed;
@@ -32,8 +39,6 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         if (!canMove) return; // Ignora o input se canMove for false
-
-        animator.SetBool("IsWalking", true);
 
         if (context.canceled)
         {
