@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,7 +7,8 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Animator animator;
-    public bool canMove = true; // Variável para controlar o movimento
+    public bool canMove = true;
+    private Vector2 lastNonZeroInput; // Armazena a última direção válida
 
     void Start()
     {
@@ -21,33 +20,60 @@ public class PlayerMovement : MonoBehaviour
     {
         if(PauseController.IsGamePaused)
         {
-            rb.velocity = Vector2.zero;
-            animator.SetBool("isWalking", false);
+            StopMovement();
             return;
         }
-        animator.SetBool("IsWalking", rb.velocity.magnitude > 0);
-        if (canMove) // Só move se canMove for true
+
+        // Atualiza a última direção válida quando há movimento
+        if(moveInput != Vector2.zero)
+        {
+            lastNonZeroInput = moveInput;
+        }
+
+        animator.SetBool("IsWalking", canMove && moveInput != Vector2.zero);
+        
+        if (canMove)
         {
             rb.velocity = moveInput * moveSpeed;
         }
         else
         {
-            rb.velocity = Vector2.zero; // Para o movimento
+            StopMovement();
         }
     }
 
     public void Move(InputAction.CallbackContext context)
     {
-        if (!canMove) return; // Ignora o input se canMove for false
+        if (!canMove || PauseController.IsGamePaused) return;
 
+        moveInput = context.ReadValue<Vector2>();
+        
         if (context.canceled)
         {
             animator.SetBool("IsWalking", false);
-            animator.SetFloat("LastInputX", moveInput.x);
-            animator.SetFloat("LastInputY", moveInput.y);
+            // Usa a última direção válida ao invés da direção atual (que é zero)
+            animator.SetFloat("LastInputX", lastNonZeroInput.x);
+            animator.SetFloat("LastInputY", lastNonZeroInput.y);
         }
-        moveInput = context.ReadValue<Vector2>();
-        animator.SetFloat("InputX", moveInput.x);
-        animator.SetFloat("InputY", moveInput.y);
+        else
+        {
+            animator.SetFloat("InputX", moveInput.x);
+            animator.SetFloat("InputY", moveInput.y);
+        }
+    }
+
+    public void SetCanMove(bool canMove)
+    {
+        this.canMove = canMove;
+        if (!canMove)
+        {
+            StopMovement();
+        }
+    }
+
+    private void StopMovement()
+    {
+        rb.velocity = Vector2.zero;
+        animator.SetBool("IsWalking", false);
     }
 }

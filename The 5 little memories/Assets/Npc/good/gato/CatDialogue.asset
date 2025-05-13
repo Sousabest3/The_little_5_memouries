@@ -13,14 +13,42 @@ MonoBehaviour:
   m_Name: CatDialogue
   m_EditorClassIdentifier: 
   npcName: Cat
-  npcPortrait: {fileID: 21300000, guid: 4a0297fa9bf3bc247aaea3b437df943e, type: 3}
+  defaultNPCExpression: {fileID: 21300000, guid: 4a0297fa9bf3bc247aaea3b437df943e, type: 3}
+  defaultPlayerExpression: {fileID: 21300000, guid: d41b509f16e7fb549819d01f748a5a2d, type: 3}
   dialogueLines:
-  - Bem Vinda, Mari
-  playerDialogueLines:
-  - 
-  isPlayerSpeaking: 00
-  typingSpeed: 0.05
-  voiceSound: {fileID: 0}
-  voicePitch: 1
-  autoProgressLines: 00
-  autoProgressDelay: 1.5
+  - text: Bem vinda Mari
+    npcExpression: {fileID: 21300000, guid: 4a0297fa9bf3bc247aaea3b437df943e, type: 3}
+    playerExpression: {fileID: 0}
+    isPlayerSpeaking: 0
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: "Ol\xE1 gatito"
+    npcExpression: {fileID: 0}
+    playerExpression: {fileID: 21300000, guid: d41b509f16e7fb549819d01f748a5a2d, type: 3}
+    isPlayerSpeaking: 1
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: tudo me
+    npcExpression: {fileID: -1132571906, guid: 9ba08443679506241958c553ef6c1f0d, type: 3}
+    playerExpression: {fileID: 0}
+    isPlayerSpeaking: 0
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: sim e ctg
+    npcExpression: {fileID: 0}
+    playerExpression: {fileID: 21300000, guid: 16d0f759013669f489b0cb3ae125d2b3, type: 3}
+    isPlayerSpeaking: 1
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1

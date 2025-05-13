@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625f644a88224f24d82ced5b939d4738, type: 3}
+  m_Name: LingaoDialogue
+  m_EditorClassIdentifier: 
+  npcName: Lingao
+  defaultNPCExpression: {fileID: 21300000, guid: 4a0297fa9bf3bc247aaea3b437df943e, type: 3}
+  defaultPlayerExpression: {fileID: 21300000, guid: d41b509f16e7fb549819d01f748a5a2d, type: 3}
+  dialogueLines:
+  - text: Bem vinda Mari
+    npcExpression: {fileID: 21300000, guid: 4a0297fa9bf3bc247aaea3b437df943e, type: 3}
+    playerExpression: {fileID: 0}
+    isPlayerSpeaking: 0
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: "Ol\xE1 gatito"
+    npcExpression: {fileID: 0}
+    playerExpression: {fileID: 21300000, guid: d41b509f16e7fb549819d01f748a5a2d, type: 3}
+    isPlayerSpeaking: 1
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: tudo me
+    npcExpression: {fileID: -1132571906, guid: 9ba08443679506241958c553ef6c1f0d, type: 3}
+    playerExpression: {fileID: 0}
+    isPlayerSpeaking: 0
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
+  - text: sim e ctg
+    npcExpression: {fileID: 0}
+    playerExpression: {fileID: 21300000, guid: 16d0f759013669f489b0cb3ae125d2b3, type: 3}
+    isPlayerSpeaking: 1
+    typingSpeed: 0.05
+    autoProgress: 0
+    autoProgressDelay: 1.5
+    voiceSound: {fileID: 0}
+    voicePitch: 1
