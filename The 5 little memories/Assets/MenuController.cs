@@ -1,47 +1,76 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    [Header("References")]
-    public GameObject menuCanvas;
-    public TabController tabController;
+    [Header("Referências")]
+    [SerializeField] private GameObject menuCanvas;
+    [SerializeField] private TabController tabController;
+ 
     
-    [Header("Settings")]
-    public bool autoOpenMapTab = true;
-    public int inventoryTabIndex = 1;
-    public int mapTabIndex = 2;
+    [Header("Configurações")]
+    [SerializeField] private bool autoOpenMapTab = true;
+    [SerializeField] private KeyCode toggleKey = KeyCode.Tab;
+    [SerializeField] private bool pauseGameWhenOpen = true;
 
-    void Start()
+    private void Awake()
     {
-        menuCanvas.SetActive(false);
+        // Auto-referência se não atribuído
+        if (menuCanvas == null) menuCanvas = GetComponentInChildren<Canvas>()?.gameObject;
+        if (tabController == null) tabController = GetComponentInChildren<TabController>();
+        
     }
 
-    void Update()
+    private void Start()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
+        if (menuCanvas != null)
+        {
+            menuCanvas.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(toggleKey))
         {
             ToggleMenu();
         }
     }
-    
+
     public void ToggleMenu()
     {
         bool willActivate = !menuCanvas.activeSelf;
+        
         menuCanvas.SetActive(willActivate);
-        PauseController.SetPause(willActivate);
+        
+        if (pauseGameWhenOpen)
+        {
+            Time.timeScale = willActivate ? 0f : 1f;
+        }
         
         if (willActivate)
         {
-            UpdateMapPosition();
-            tabController.ActivateTab(autoOpenMapTab ? mapTabIndex : inventoryTabIndex);
+            // Chamada atualizada para usar métodos existentes
+            
+            if (autoOpenMapTab && tabController != null)
+            {
+                tabController.ActivateTab(2); // Assumindo que 2 é o índice do mapa
+            }
         }
     }
-    
-    void UpdateMapPosition()
+
+    public void OpenMenu()
     {
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        MapTracker.Instance?.UpdateMapPosition(currentSceneIndex);
+        if (!menuCanvas.activeSelf)
+        {
+            ToggleMenu();
+        }
+    }
+
+    public void CloseMenu()
+    {
+        if (menuCanvas.activeSelf)
+        {
+            ToggleMenu();
+        }
     }
 }
-    

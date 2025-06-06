@@ -19,6 +19,4 @@ public class DialogueLine
     public float typingSpeed = 0.05f;
     public bool autoProgress = false;
     public float autoProgressDelay = 2f;
-    public AudioClip voiceSound;
-    public float voicePitch = 1f;
 }

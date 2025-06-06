@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Animator animator;
     public bool canMove = true;
-    private Vector2 lastNonZeroInput; // Armazena a última direção válida
+    private Vector2 lastNonZeroInput;
 
     void Start()
     {
@@ -18,20 +18,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(PauseController.IsGamePaused)
+        if (PauseController.IsGamePaused)
         {
             StopMovement();
             return;
         }
 
-        // Atualiza a última direção válida quando há movimento
-        if(moveInput != Vector2.zero)
+        if (moveInput != Vector2.zero)
         {
             lastNonZeroInput = moveInput;
         }
 
         animator.SetBool("IsWalking", canMove && moveInput != Vector2.zero);
-        
+
         if (canMove)
         {
             rb.velocity = moveInput * moveSpeed;
@@ -46,12 +45,25 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!canMove || PauseController.IsGamePaused) return;
 
-        moveInput = context.ReadValue<Vector2>();
-        
+        Vector2 rawInput = context.ReadValue<Vector2>();
+
+        // Limita a 4 direções (horizontal OU vertical)
+        if (Mathf.Abs(rawInput.x) > Mathf.Abs(rawInput.y))
+        {
+            moveInput = new Vector2(Mathf.Sign(rawInput.x), 0f);
+        }
+        else if (Mathf.Abs(rawInput.y) > 0)
+        {
+            moveInput = new Vector2(0f, Mathf.Sign(rawInput.y));
+        }
+        else
+        {
+            moveInput = Vector2.zero;
+        }
+
         if (context.canceled)
         {
             animator.SetBool("IsWalking", false);
-            // Usa a última direção válida ao invés da direção atual (que é zero)
             animator.SetFloat("LastInputX", lastNonZeroInput.x);
             animator.SetFloat("LastInputY", lastNonZeroInput.y);
         }
@@ -59,6 +71,11 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetFloat("InputX", moveInput.x);
             animator.SetFloat("InputY", moveInput.y);
+        }
+
+        if (moveInput != Vector2.zero)
+        {
+            lastNonZeroInput = moveInput;
         }
     }
 
@@ -75,5 +92,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = Vector2.zero;
         animator.SetBool("IsWalking", false);
+    }
+
+    public Vector3 GetCurrentPosition()
+    {
+        return transform.position;
     }
 }
