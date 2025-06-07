@@ -3,11 +3,14 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
 public class EnemyAI : MonoBehaviour
 {
+    [Header("Movimentação e Raio")]
     public float patrolRadius = 3f;
     public float moveSpeed = 2f;
     public float chaseDistance = 5f;
+
+    [Header("Transição para Batalha")]
     public Transform player;
-    public string battleSceneName;
+    public string battleSceneName = "Battle";
 
     private Vector2 patrolCenter;
     private Vector2 patrolTarget;
@@ -23,6 +26,13 @@ public class EnemyAI : MonoBehaviour
         patrolTarget = GetRandomPatrolPoint();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        if (player == null)
+        {
+            GameObject found = GameObject.FindGameObjectWithTag("Player");
+            if (found != null)
+                player = found.transform;
+        }
     }
 
     private void Update()
@@ -66,10 +76,9 @@ public class EnemyAI : MonoBehaviour
         Vector2 direction = (target - (Vector2)transform.position).normalized;
         rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
 
-        // Animations (opcional)
         animator.SetFloat("MoveX", direction.x);
         animator.SetFloat("MoveY", direction.y);
-        animator.SetBool("IsMoving", true);
+        animator.SetBool("IsMoving", direction.magnitude > 0.01f);
     }
 
     private Vector2 GetRandomPatrolPoint()
@@ -86,7 +95,18 @@ public class EnemyAI : MonoBehaviour
             isInBattle = true;
             rb.velocity = Vector2.zero;
             animator.SetBool("IsMoving", false);
-            SceneTransitionManager.Instance.ChangeScene(battleSceneName, Vector2.zero);
+
+            if (SceneTransitionManager.Instance != null)
+            {
+                SceneTransitionManager.Instance.ChangeScene(battleSceneName, Vector2.zero);
+            }
+            else
+            {
+                Debug.LogWarning("SceneTransitionManager não encontrado!");
+            }
+
+            // (Opcional) Desabilita a IA após iniciar batalha
+            this.enabled = false;
         }
     }
 }

@@ -1,67 +1,100 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 public class BattleManager : MonoBehaviour
 {
-    public List<CharacterBase> turnOrder = new List<CharacterBase>();
-    public int currentTurnIndex = 0;
-
-    public List<AllyCombatant> allies;
-    public List<EnemyCombatant> enemies;
-
     public static BattleManager Instance;
 
-    private void Awake()
+    [Header("Combatants")]
+    public PlayerCombatant player;
+    public AllyCombatant ally;
+    public List<EnemyCombatant> enemies = new List<EnemyCombatant>();
+
+    [Header("UI")]
+    public BattleUI battleUI;
+
+    private int currentTurn = 0;
+
+    void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
     }
 
     void Start()
     {
-        BeginBattle();
+        player.Init();
+        ally.Init();
+        foreach (var enemy in enemies)
+            enemy.Init();
+
+        battleUI.Setup(player, ally, enemies.ToArray());
+
+        StartCoroutine(BattleLoop());
     }
 
-    public void BeginBattle()
+    IEnumerator BattleLoop()
     {
-        turnOrder.Clear();
-        turnOrder.AddRange(allies);
-        turnOrder.AddRange(enemies);
-        currentTurnIndex = 0;
-        NextTurn();
+        yield return PlayerTurn();
+        yield return AllyTurn();
+        yield return EnemyTurn();
+
+        // Repetir ciclo
+        StartCoroutine(BattleLoop());
     }
 
-    public void NextTurn()
+    IEnumerator PlayerTurn()
     {
-        currentTurnIndex = (currentTurnIndex + 1) % turnOrder.Count;
+        Debug.Log("Turno do jogador...");
+        yield return battleUI.ShowPlayerCommand(player);
+    }
 
-        while (turnOrder[currentTurnIndex].IsDead)
+    IEnumerator AllyTurn()
+    {
+        Debug.Log("Turno do aliado...");
+        if (ally.IsAlive)
         {
-            currentTurnIndex = (currentTurnIndex + 1) % turnOrder.Count;
+            EnemyCombatant target = GetRandomAliveEnemy();
+            if (target != null)
+            {
+                target.TakeDamage(10); // ataque básico
+                Debug.Log("Aliado atacou!");
+                battleUI.UpdateEnemyStatus();
+            }
         }
 
-        var current = turnOrder[currentTurnIndex];
-        if (current.isPlayer)
-            BattleUI.Instance.ShowCommands(current as AllyCombatant);
-        else
-            StartCoroutine(EnemyAction(current as EnemyCombatant));
-    }
-
-    IEnumerator EnemyAction(EnemyCombatant enemy)
-    {
         yield return new WaitForSeconds(1f);
-        enemy.AttackRandomAlly();
-        yield return new WaitForSeconds(1f);
-        NextTurn();
     }
 
-    public void TryRun()
+    IEnumerator EnemyTurn()
     {
-        if (Random.value <= 0.2ff)
+        Debug.Log("Turno dos inimigos...");
+        foreach (var enemy in enemies)
         {
-            BattleUI.Instance.ShowMessage("Conseguiste fugir!");
-            SceneManager.LoadScene("WorldScene"); // ou cena anterior
+            if (!enemy.IsAlive) continue;
+
+            int targetIndex = Random.Range(0, 2);
+            if (targetIndex == 0 && player.IsAlive)
+            {
+                player.TakeDamage(enemy.attack);
+            }
+            else if (ally.IsAlive)
+            {
+                ally.TakeDamage(enemy.attack);
+            }
         }
-        else
-        {
-            BattleUI.Instance.ShowMessage("Fuga falhou!");
-            StartCoroutine(EnemyAction(enemies[0])); // contra-ataque
-        }
+
+        battleUI.UpdatePartyStatus();
+        yield return new WaitForSeconds(1f);
+    }
+
+    public EnemyCombatant GetRandomAliveEnemy()
+    {
+        List<EnemyCombatant> alive = enemies.FindAll(e => e.IsAlive);
+        if (alive.Count == 0) return null;
+        return alive[Random.Range(0, alive.Count)];
     }
 }
