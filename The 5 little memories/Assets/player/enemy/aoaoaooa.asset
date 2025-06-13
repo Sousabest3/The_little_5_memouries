@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4f567d6be929841aa5b25cc07147e7, type: 3}
+  m_Name: aoaoaooa
+  m_EditorClassIdentifier: 
+  characterName: cagao
+  portrait: {fileID: -805845383, guid: 43b5ea6b0a3857c4b8c66873f5cce739, type: 3}
+  hurtPortrait: {fileID: 1892215790, guid: d2360fe86916458468b49bbcb40a968c, type: 3}
+  healPortrait: {fileID: -1840671455, guid: 43d9744bc28d9cc41b68fe4d0044edca, type: 3}
+  maxHP: 100
+  maxMP: 30
+  attack: 10
+  skills: []

@@ -1,112 +1,94 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(Animator))]
+[RequireComponent(typeof(Collider2D))]
 public class EnemyAI : MonoBehaviour
 {
-    [Header("Movimentação e Raio")]
-    public float patrolRadius = 3f;
     public float moveSpeed = 2f;
-    public float chaseDistance = 5f;
+    public float detectionRadius = 3f;
+    public Vector2 patrolAreaMin;
+    public Vector2 patrolAreaMax;
 
-    [Header("Transição para Batalha")]
-    public Transform player;
-    public string battleSceneName = "Battle";
+    public string battleSceneName = "BattleScene";
 
-    private Vector2 patrolCenter;
-    private Vector2 patrolTarget;
-    private Rigidbody2D rb;
-    private Animator animator;
-
+    private Transform player;
+    private Vector2 targetPosition;
     private bool isChasing = false;
-    private bool isInBattle = false;
 
     private void Start()
     {
-        patrolCenter = transform.position;
-        patrolTarget = GetRandomPatrolPoint();
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-
-        if (player == null)
-        {
-            GameObject found = GameObject.FindGameObjectWithTag("Player");
-            if (found != null)
-                player = found.transform;
-        }
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        ChooseNewPatrolTarget();
     }
 
     private void Update()
     {
-        if (isInBattle || player == null) return;
+        if (player == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, player.position);
+        float distance = Vector2.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= chaseDistance)
-        {
+        if (distance < detectionRadius)
             isChasing = true;
-        }
-        else if (distanceToPlayer > chaseDistance * 1.2f)
-        {
+        else if (distance > detectionRadius * 1.5f)
             isChasing = false;
-        }
 
         if (isChasing)
-            ChasePlayer();
+        {
+            Vector2 direction = (player.position - transform.position).normalized;
+
+            // Movimento em 4 direções (sem diagonais)
+            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+            {
+                direction.y = 0;
+                direction.x = Mathf.Sign(direction.x);
+            }
+            else
+            {
+                direction.x = 0;
+                direction.y = Mathf.Sign(direction.y);
+            }
+
+            transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
+        }
         else
+        {
             Patrol();
+        }
     }
 
     private void Patrol()
     {
-        if (Vector2.Distance(transform.position, patrolTarget) < 0.2f)
+        if (Vector2.Distance(transform.position, targetPosition) < 0.2f)
         {
-            patrolTarget = GetRandomPatrolPoint();
+            ChooseNewPatrolTarget();
         }
 
-        MoveTo(patrolTarget);
+        Vector2 dir = (targetPosition - (Vector2)transform.position).normalized;
+        transform.position += (Vector3)dir * moveSpeed * Time.deltaTime;
     }
 
-    private void ChasePlayer()
+    private void ChooseNewPatrolTarget()
     {
-        MoveTo(player.position);
-    }
-
-    private void MoveTo(Vector2 target)
-    {
-        Vector2 direction = (target - (Vector2)transform.position).normalized;
-        rb.MovePosition(rb.position + direction * moveSpeed * Time.deltaTime);
-
-        animator.SetFloat("MoveX", direction.x);
-        animator.SetFloat("MoveY", direction.y);
-        animator.SetBool("IsMoving", direction.magnitude > 0.01f);
-    }
-
-    private Vector2 GetRandomPatrolPoint()
-    {
-        return patrolCenter + (Random.insideUnitCircle * patrolRadius);
+        float x = Random.Range(patrolAreaMin.x, patrolAreaMax.x);
+        float y = Random.Range(patrolAreaMin.y, patrolAreaMax.y);
+        targetPosition = new Vector2(x, y);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isInBattle) return;
-
         if (other.CompareTag("Player"))
         {
-            isInBattle = true;
-            rb.velocity = Vector2.zero;
-            animator.SetBool("IsMoving", false);
+            Vector2 playerPos = other.transform.position;
 
+            // Adiciona fade e salva a posição
             if (SceneTransitionManager.Instance != null)
             {
-                SceneTransitionManager.Instance.ChangeScene(battleSceneName, Vector2.zero);
+                SceneTransitionManager.Instance.ChangeScene(battleSceneName, playerPos);
             }
             else
             {
-                Debug.LogWarning("SceneTransitionManager não encontrado!");
+                // Backup se não houver transition manager
+                UnityEngine.SceneManagement.SceneManager.LoadScene(battleSceneName);
             }
-
-            // (Opcional) Desabilita a IA após iniciar batalha
-            this.enabled = false;
         }
     }
 }

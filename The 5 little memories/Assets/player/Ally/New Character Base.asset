@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4f567d6be929841aa5b25cc07147e7, type: 3}
+  m_Name: New Character Base
+  m_EditorClassIdentifier: 
+  characterName: baia
+  portrait: {fileID: 1129969105, guid: 43b5ea6b0a3857c4b8c66873f5cce739, type: 3}
+  hurtPortrait: {fileID: 360597923, guid: c1b42be3bf28d37488f22dfd69d3d4db, type: 3}
+  healPortrait: {fileID: 216136895, guid: d1c7ab2cc31fd2446bf2d0e12a84c5bc, type: 3}
+  maxHP: 120
+  maxMP: 10
+  attack: 30
+  skills:
+  - {fileID: 11400000, guid: f89ccbaffee91834a92fa591ea1c1142, type: 2}
+  - {fileID: 11400000, guid: dd9b20bd4d76d114cb5229e7094150ba, type: 2}

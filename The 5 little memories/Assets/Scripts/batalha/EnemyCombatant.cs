@@ -1,21 +1,9 @@
 using UnityEngine;
 
-public class EnemyCombatant : MonoBehaviour
+public class EnemyCombatant : CharacterCombatant
 {
-    public CharacterBase data;
-    public int currentHP;
-
-    public int attack => data.attack;
-    public bool IsAlive => currentHP > 0;
-
-    public void Init()
+    public override void Init()
     {
-        currentHP = data.maxHP;
-    }
-
-    public void TakeDamage(int damage)
-    {
-        currentHP -= damage;
-        currentHP = Mathf.Max(currentHP, 0);
+        base.Init();
     }
 }

@@ -106,16 +106,22 @@ public class InventorySystem : MonoBehaviour
 
     public void RemoveItem(Item item, int amount = 1)
     {
-        foreach (var stack in inventoryItems)
+        for (int i = 0; i < inventoryItems.Count; i++)
         {
-            if (stack.item == item)
+            if (inventoryItems[i].item == item)
             {
-                stack.amount -= amount;
-                if (stack.amount <= 0)
-                    inventoryItems.Remove(stack);
-                UpdateUI();
-                return;
+                inventoryItems[i].amount -= amount;
+                if (inventoryItems[i].amount <= 0)
+                    inventoryItems.RemoveAt(i);
+                break;
             }
         }
+
+        UpdateUI();
+    }
+
+    public List<ItemStack> GetAllItems()
+    {
+        return new List<ItemStack>(inventoryItems);
     }
 }

@@ -1,17 +1,17 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [CreateAssetMenu(menuName = "Battle/Character Base")]
 public class CharacterBase : ScriptableObject
 {
-    [Header("Identidade")]
     public string characterName;
     public Sprite portrait;
+    public Sprite hurtPortrait;
+    public Sprite healPortrait;
 
-    [Header("Stats")]
-    public int maxHP;
-    public int maxMP;
-    public int attack;
+    public int maxHP = 100;
+    public int maxMP = 30;
+    public int attack = 10;
 
-    [Header("Habilidades")]
-    public SkillData[] skills;
+    public List<SkillData> skills;
 }

@@ -1,140 +1,157 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
 public class BattleUI : MonoBehaviour
 {
+    public static BattleUI Instance;
+
     public GameObject commandPanel;
     public GameObject skillPanel;
     public GameObject itemPanel;
 
-    public Button attackButton, skillButton, guardButton, fleeButton;
     public Transform skillListContainer;
+    public Transform itemListContainer;
     public GameObject skillButtonPrefab;
+    public GameObject itemButtonPrefab;
+
+    public Button attackButton, skillButton, itemButton, fleeButton;
 
     public PartyStatusUI[] partyStatusUIs;
+    public TMP_Text dialogueBox;
+
+    public GameObject damagePopupPrefab;
 
     private PlayerCombatant currentPlayer;
+    private EnemyCombatant selectedEnemy;
 
-    public void Setup(PlayerCombatant player, AllyCombatant ally, EnemyCombatant[] enemies)
+    private void Awake() => Instance = this;
+
+    public void Setup(PlayerCombatant player, PlayerCombatant ally, EnemyCombatant[] enemies)
     {
         partyStatusUIs[0].Setup(player);
         partyStatusUIs[1].Setup(ally);
-
         HideAllPanels();
     }
 
     public IEnumerator ShowPlayerCommand(PlayerCombatant player)
     {
         currentPlayer = player;
-        bool waiting = true;
+        selectedEnemy = null;
 
+        dialogueBox.text = $"{player.data.characterName}, escolha sua ação...";
         commandPanel.SetActive(true);
+
+        bool actionChosen = false;
 
         attackButton.onClick.RemoveAllListeners();
         attackButton.onClick.AddListener(() =>
         {
-            OnAttack();
-            waiting = false;
+            if (selectedEnemy != null)
+            {
+                selectedEnemy.TakeDamage(currentPlayer.data.attack);
+                dialogueBox.text = $"{player.data.characterName} atacou {selectedEnemy.data.characterName}!";
+                actionChosen = true;
+            }
         });
 
         skillButton.onClick.RemoveAllListeners();
         skillButton.onClick.AddListener(() =>
         {
-            OnSkill();
-            waiting = false;
+            ShowSkillPanel(player);
         });
 
-        guardButton.onClick.RemoveAllListeners();
-        guardButton.onClick.AddListener(() =>
+        itemButton.onClick.RemoveAllListeners();
+        itemButton.onClick.AddListener(() =>
         {
-            OnGuard();
-            waiting = false;
+            ShowItemPanel(player);
         });
 
         fleeButton.onClick.RemoveAllListeners();
         fleeButton.onClick.AddListener(() =>
         {
-            OnFlee();
-            waiting = false;
+            if (Random.value < 0.2f)
+            {
+                dialogueBox.text = "Fuga bem-sucedida!";
+                SceneManager.LoadScene("Florest2");
+            }
+            else
+            {
+                player.TakeDamage(5);
+                dialogueBox.text = "Fuga falhou! Sofreu dano.";
+                actionChosen = true;
+            }
         });
 
-        while (waiting)
+        while (!actionChosen)
             yield return null;
 
         HideAllPanels();
     }
 
-    void OnAttack()
-    {
-        EnemyCombatant target = BattleManager.Instance.GetRandomAliveEnemy();
-        if (target != null)
-        {
-            target.TakeDamage(currentPlayer.attackPower);
-            UpdateEnemyStatus();
-        }
-        UpdatePartyStatus();
-    }
-
-    void OnSkill()
+    void ShowSkillPanel(PlayerCombatant player)
     {
         skillPanel.SetActive(true);
 
         foreach (Transform child in skillListContainer)
             Destroy(child.gameObject);
 
-        foreach (var skill in currentPlayer.skills)
+        foreach (var skill in player.data.skills)
         {
-            GameObject btn = Instantiate(skillButtonPrefab, skillListContainer);
-            btn.GetComponentInChildren<TMP_Text>().text = $"{skill.skillName} ({skill.manaCost} MP)";
+            var btn = Instantiate(skillButtonPrefab, skillListContainer);
+            btn.GetComponentInChildren<TMP_Text>().text = skill.skillName;
+
             btn.GetComponent<Button>().onClick.AddListener(() =>
             {
-                if (currentPlayer.currentMP >= skill.manaCost)
+                if (skill.isHealing)
                 {
-                    skill.Use(currentPlayer); // ← você pode passar um inimigo como alvo
-                    UpdatePartyStatus();
+                    skill.Use(player, player); // Curar a si mesmo (ou abrir para seleção)
+                    dialogueBox.text = $"{player.data.characterName} usou {skill.skillName}!";
                 }
+                else if (selectedEnemy != null)
+                {
+                    skill.Use(player, selectedEnemy);
+                    dialogueBox.text = $"{player.data.characterName} usou {skill.skillName} em {selectedEnemy.data.characterName}!";
+                }
+
+                HideAllPanels();
             });
         }
     }
 
-    void OnGuard()
+    void ShowItemPanel(PlayerCombatant player)
+{
+    itemPanel.SetActive(true);
+
+    foreach (Transform child in itemListContainer)
+        Destroy(child.gameObject);
+
+    foreach (var stack in BattleInventory.Instance.usableItems)
     {
-        Debug.Log("Defendendo...");
-        // Você pode ativar um flag como currentPlayer.isDefending = true;
+        var btn = Instantiate(itemButtonPrefab, itemListContainer);
+        btn.GetComponent<BattleItemUI>().Setup(stack.item, new PlayerCombatant[] { player });
+    }
+}
+
+
+    public void SetSelectedTarget(EnemyCombatant enemy)
+    {
+        selectedEnemy = enemy;
+        dialogueBox.text = $"{enemy.data.characterName} foi selecionado!";
     }
 
-    void OnFlee()
+    public void ShowDamage(Vector3 pos, int value, bool isHeal)
     {
-        if (Random.value < 0.2f)
-        {
-            Debug.Log("Fuga bem-sucedida!");
-            // SceneManager.LoadScene(...);
-        }
-        else
-        {
-            Debug.Log("Fuga falhou! Tomou dano.");
-            currentPlayer.TakeDamage(5);
-            UpdatePartyStatus();
-        }
+        GameObject popup = Instantiate(damagePopupPrefab, pos, Quaternion.identity);
+        TMP_Text txt = popup.GetComponentInChildren<TMP_Text>();
+        txt.text = value.ToString();
+        txt.color = isHeal ? Color.green : Color.red;
     }
 
-    public void UpdatePartyStatus()
-    {
-        foreach (var ui in partyStatusUIs)
-        {
-            ui.UpdateUI();
-        }
-    }
-
-    public void UpdateEnemyStatus()
-    {
-        // TODO: implementar se houver UI de inimigos
-    }
-
-    void HideAllPanels()
+    public void HideAllPanels()
     {
         commandPanel.SetActive(false);
         skillPanel.SetActive(false);
