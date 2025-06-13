@@ -9,7 +9,7 @@ public class CurrencySystem : MonoBehaviour
     [SerializeField] private int startingGold = 0;
 
     [Header("UI")]
-    [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private TMP_Text goldText; // único campo válido
 
     private int currentGold;
 
@@ -51,11 +51,12 @@ public class CurrencySystem : MonoBehaviour
         return currentGold;
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         if (goldText != null)
-        {
             goldText.text = $"Gold: {currentGold}";
-        }
+
+        if (ShopSystem.Instance != null)
+            ShopSystem.Instance.UpdateGoldUI();
     }
 }
