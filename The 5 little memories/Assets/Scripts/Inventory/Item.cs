@@ -15,4 +15,8 @@ public class Item : ScriptableObject
     [Header("Batalha")]
     public BattleEffectType effectType;
     public int effectPower;
+
+    [Header("Chave")]
+    public bool isKey = false;
+    public string keyID; // usado para identificar portas
 }
