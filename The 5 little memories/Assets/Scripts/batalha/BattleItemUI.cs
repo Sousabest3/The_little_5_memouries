@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// BattleItemUI.cs já está pronto
 public class BattleItemUI : MonoBehaviour
 {
     public TMP_Text itemNameText;

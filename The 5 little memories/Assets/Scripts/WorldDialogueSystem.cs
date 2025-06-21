@@ -17,6 +17,12 @@ public class WorldDialogueSystem : MonoBehaviour
     public KeyCode advanceKey = KeyCode.Space;
     public float defaultTypingSpeed = 0.04f;
 
+    [Header("Typing Sound")]
+    public AudioSource audioSource;
+    public AudioClip blipSound;
+    public float blipVolume = 0.5f;
+    public int blipFrequency = 2;
+
     private WorldDialogueLine[] currentLines;
     private int currentIndex = 0;
     private Coroutine typingCoroutine;
@@ -87,10 +93,18 @@ public class WorldDialogueSystem : MonoBehaviour
         dialogueText.text = "";
 
         float speed = Mathf.Max(0.01f, line.typingSpeed);
+        int letterIndex = 0;
 
         foreach (char c in line.text)
         {
             dialogueText.text += c;
+
+            if (char.IsLetterOrDigit(c) && blipSound != null && audioSource != null && letterIndex % blipFrequency == 0)
+            {
+                audioSource.PlayOneShot(blipSound, blipVolume);
+            }
+
+            letterIndex++;
             yield return new WaitForSeconds(speed);
         }
 
@@ -121,4 +135,10 @@ public class WorldDialogueSystem : MonoBehaviour
         if (playerMovement != null)
             playerMovement.SetCanMove(true);
     }
+
+    public bool IsDialogueActive()
+{
+    return isDialogueActive;
+}
+
 }

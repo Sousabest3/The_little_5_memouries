@@ -20,16 +20,21 @@ public class InventorySystem : MonoBehaviour
 
     private List<ItemStack> inventoryItems = new List<ItemStack>();
 
-    private void Awake()
+    void Awake()
+{
+    if (Instance == null)
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-
-        InitializeSlots();
-        ClearItemDetails();
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // ← ESSENCIAL para manter o inventário entre cenas
     }
+    else
+    {
+        Destroy(gameObject);
+    }
+
+    InitializeSlots();
+    ClearItemDetails();
+}
 
     private void InitializeSlots()
     {
@@ -124,4 +129,6 @@ public class InventorySystem : MonoBehaviour
     {
         return new List<ItemStack>(inventoryItems);
     }
+
+    
 }

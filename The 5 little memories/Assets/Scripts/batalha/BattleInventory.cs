@@ -12,19 +12,33 @@ public class BattleInventory : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else
+        {
             Destroy(gameObject);
+            return;
+        }
+
+        // Carrega os itens assim que possível
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        LoadUsableItems();
     }
 
     /// <summary>
-    /// Chamar antes da batalha para carregar os itens que têm efeito de batalha.
+    /// Substitua este método para usar seu próprio sistema de inventário!
     /// </summary>
     public void LoadUsableItems()
     {
         usableItems.Clear();
 
-        foreach (var slot in InventorySystem.Instance.GetAllItems())
+        // ⚠️ Substitua por seu próprio inventário aqui:
+        List<ItemStack> allItems = InventorySystem.Instance.GetAllItems();
+
+        foreach (var slot in allItems)
         {
-            if (slot.item.effectType != BattleEffectType.None)
+            if (slot.item != null && slot.item.effectType != BattleEffectType.None)
             {
                 usableItems.Add(new ItemStack(slot.item, slot.amount));
             }
@@ -33,6 +47,9 @@ public class BattleInventory : MonoBehaviour
 
     public void UseItem(Item item, CharacterCombatant target)
     {
+        if (item == null || target == null) return;
+
+        // Aplica o efeito
         if (item.effectType == BattleEffectType.Heal)
         {
             target.Heal(item.effectPower);
@@ -42,6 +59,8 @@ public class BattleInventory : MonoBehaviour
             target.TakeDamage(item.effectPower);
         }
 
+        // Remove do seu inventário
         InventorySystem.Instance.RemoveItem(item, 1);
+
     }
 }

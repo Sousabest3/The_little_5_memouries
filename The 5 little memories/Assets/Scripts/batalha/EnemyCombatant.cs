@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EnemyCombatant : CharacterCombatant
 {
-    public override void Init()
+    private void OnMouseDown()
     {
-        base.Init();
+        BattleUI.Instance.SetSelectedTarget(this);
     }
 }

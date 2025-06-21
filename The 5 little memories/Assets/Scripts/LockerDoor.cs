@@ -25,6 +25,9 @@ public class LockedDoor : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        // Impede interação se diálogo já estiver ativo
+        if (WorldDialogueSystem.Instance.IsDialogueActive()) return;
+
         if (isUnlocked) return;
 
         foreach (var stack in InventorySystem.Instance.GetAllItems())
@@ -32,7 +35,7 @@ public class LockedDoor : MonoBehaviour, IInteractable
             if (stack.item != null && stack.item.isKey && stack.item.keyID == requiredKeyID)
             {
                 isUnlocked = true;
-                InventorySystem.Instance.RemoveItem(stack.item); // Remove chave opcionalmente
+                InventorySystem.Instance.RemoveItem(stack.item);
                 WorldDialogueSystem.Instance.ShowDialogue(unlockedMessage);
                 StartCoroutine(OpenAndTransition());
                 return;

@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class EnemySelector : MonoBehaviour
+public class EnemySelector : MonoBehaviour, IPointerClickHandler
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public EnemyCombatant enemy;
 
-    // Update is called once per frame
-    void Update()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        
+        if (enemy.IsAlive)
+        {
+            BattleUI.Instance.SetSelectedTarget(enemy);
+        }
     }
 }

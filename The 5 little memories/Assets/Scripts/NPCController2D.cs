@@ -43,7 +43,6 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        // ✅ Apenas destrói este NPC se ele for seguidor E já houver outro ativo
         if (FollowingNPC != null && FollowingNPC != this && canFollowAfterDialogue)
         {
             Destroy(gameObject);
@@ -212,6 +211,13 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // ✅ DESTROI O NPC SE ESTIVER A SEGUIR E A CENA FOR DE BATALHA
+        if (isFollowing && scene.name == "Battle")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         FindPlayer();
 
         if (isFollowing && player != null)
