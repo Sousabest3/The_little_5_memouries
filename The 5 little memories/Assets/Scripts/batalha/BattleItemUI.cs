@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 
 public class BattleItemUI : MonoBehaviour
 {
@@ -9,7 +9,7 @@ public class BattleItemUI : MonoBehaviour
 
     private Item itemData;
 
-    public void Setup(Item item, PlayerCombatant[] party)
+    public void Setup(Item item, PlayerCombatant[] party, System.Action onItemUsed)
     {
         itemData = item;
         itemNameText.text = item.itemName;
@@ -22,7 +22,8 @@ public class BattleItemUI : MonoBehaviour
                 if (member.IsAlive)
                 {
                     BattleInventory.Instance.UseItem(itemData, member);
-                    BattleUI.Instance.dialogueBox.text = $"{member.data.characterName} usou {itemData.itemName}!";
+                    BattleUI.Instance.enemyStatusUI.UpdateUI();
+                    onItemUsed?.Invoke(); // ✅ aciona finalização da ação
                     break;
                 }
             }

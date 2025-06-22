@@ -32,6 +32,9 @@ public abstract class CharacterCombatant : MonoBehaviour
         var ui = GetComponentInChildren<PartyStatusUI>();
         if (ui != null)
             ui.FlashPortrait(data.hurtPortrait);
+
+        if (currentHP <= 0)
+            Die();
     }
 
     public virtual void Heal(int amount)
@@ -61,5 +64,10 @@ public abstract class CharacterCombatant : MonoBehaviour
             data.attack += 2;
             BattleUI.Instance.dialogueBox.text += $"\n{data.characterName} subiu para o nível {level}!";
         }
+    }
+
+    protected virtual void Die()
+    {
+        // Pode ser sobrescrito por Player ou Enemy
     }
 }

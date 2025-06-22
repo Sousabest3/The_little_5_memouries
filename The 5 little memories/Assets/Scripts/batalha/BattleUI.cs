@@ -38,6 +38,7 @@ public class BattleUI : MonoBehaviour
 
     private PlayerCombatant currentPlayer;
     private EnemyCombatant selectedEnemy;
+    private bool actionChosen;
 
     private void Awake() => Instance = this;
 
@@ -58,36 +59,38 @@ public class BattleUI : MonoBehaviour
     public IEnumerator ShowPlayerCommand(PlayerCombatant player)
     {
         currentPlayer = player;
-
         dialogueBox.text = $"{player.data.characterName}, escolha sua ação...";
         commandPanel.SetActive(true);
+        actionChosen = false;
 
-        bool actionChosen = false;
-
+        // Botão de ataque
         attackButton.onClick.RemoveAllListeners();
         attackButton.onClick.AddListener(() =>
         {
             if (selectedEnemy != null)
             {
                 selectedEnemy.TakeDamage(currentPlayer.data.attack);
-                enemyStatusUI.UpdateUI(); // Atualiza UI do inimigo
+                enemyStatusUI.UpdateUI();
                 dialogueBox.text = $"{player.data.characterName} atacou {selectedEnemy.data.characterName}!";
                 actionChosen = true;
             }
         });
 
+        // Botão de skill
         skillButton.onClick.RemoveAllListeners();
         skillButton.onClick.AddListener(() =>
         {
             ShowSkillPanel(player);
         });
 
+        // Botão de item
         itemButton.onClick.RemoveAllListeners();
         itemButton.onClick.AddListener(() =>
         {
             ShowItemPanel(player);
         });
 
+        // Botão de fuga
         fleeButton.onClick.RemoveAllListeners();
         fleeButton.onClick.AddListener(() =>
         {
@@ -119,6 +122,7 @@ public class BattleUI : MonoBehaviour
             commandPanel.SetActive(true);
         });
 
+        // Espera o jogador escolher
         while (!actionChosen)
             yield return null;
 
@@ -153,6 +157,7 @@ public class BattleUI : MonoBehaviour
                 }
 
                 HideAllPanels();
+                actionChosen = true; // ✅ IMPORTANTE!
             });
         }
     }
@@ -168,7 +173,11 @@ public class BattleUI : MonoBehaviour
         foreach (var stack in BattleInventory.Instance.usableItems)
         {
             var btn = Instantiate(itemButtonPrefab, itemListContainer);
-            btn.GetComponent<BattleItemUI>().Setup(stack.item, new PlayerCombatant[] { player });
+            btn.GetComponent<BattleItemUI>().Setup(stack.item, new PlayerCombatant[] { player }, () =>
+            {
+                dialogueBox.text = $"{player.data.characterName} usou {stack.item.itemName}!";
+                actionChosen = true; // ✅ AÇÃO CONCLUÍDA
+            });
         }
     }
 
