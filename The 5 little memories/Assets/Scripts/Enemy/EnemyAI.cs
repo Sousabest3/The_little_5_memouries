@@ -13,6 +13,8 @@ public class EnemyAI : MonoBehaviour
     private Transform player;
     private Vector2 targetPosition;
     private bool isChasing = false;
+    public BattleEncounterManager encounterManager;
+
 
     private void Start()
     {
@@ -73,22 +75,26 @@ public class EnemyAI : MonoBehaviour
         targetPosition = new Vector2(x, y);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
+        private void OnTriggerEnter2D(Collider2D other)
+        {
         if (other.CompareTag("Player"))
         {
             Vector2 playerPos = other.transform.position;
 
-            // Adiciona fade e salva a posição
+            if (encounterManager != null)
+            {
+                encounterManager.ChooseRandomEnemy();
+            }
+
             if (SceneTransitionManager.Instance != null)
             {
                 SceneTransitionManager.Instance.ChangeScene(battleSceneName, playerPos);
             }
             else
             {
-                // Backup se não houver transition manager
                 UnityEngine.SceneManagement.SceneManager.LoadScene(battleSceneName);
             }
         }
     }
+
 }
