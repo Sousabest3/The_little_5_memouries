@@ -14,7 +14,7 @@ public class BattleEncounterManager : ScriptableObject
         }
         else
         {
-            Debug.LogWarning("Nenhum inimigo na pool do BattleEncounterManager.");
+            Debug.LogWarning("enemyPool está vazio!");
         }
     }
 }

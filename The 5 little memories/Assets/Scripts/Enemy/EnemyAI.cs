@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Collider2D))]
 public class EnemyAI : MonoBehaviour
@@ -8,13 +9,12 @@ public class EnemyAI : MonoBehaviour
     public Vector2 patrolAreaMin;
     public Vector2 patrolAreaMax;
 
-    public string battleSceneName = "BattleScene";
+    public string battleSceneName = "Battle"; // Nome da cena de batalha
+    public BattleEncounterManager encounterManager; // Arrastaste o asset aqui
 
     private Transform player;
     private Vector2 targetPosition;
     private bool isChasing = false;
-    public BattleEncounterManager encounterManager;
-
 
     private void Start()
     {
@@ -34,27 +34,28 @@ public class EnemyAI : MonoBehaviour
             isChasing = false;
 
         if (isChasing)
+            ChasePlayer();
+        else
+            Patrol();
+    }
+
+    private void ChasePlayer()
+    {
+        Vector2 direction = (player.position - transform.position).normalized;
+
+        // Movimento em 4 direções
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
-            Vector2 direction = (player.position - transform.position).normalized;
-
-            // Movimento em 4 direções (sem diagonais)
-            if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-            {
-                direction.y = 0;
-                direction.x = Mathf.Sign(direction.x);
-            }
-            else
-            {
-                direction.x = 0;
-                direction.y = Mathf.Sign(direction.y);
-            }
-
-            transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
+            direction.y = 0;
+            direction.x = Mathf.Sign(direction.x);
         }
         else
         {
-            Patrol();
+            direction.x = 0;
+            direction.y = Mathf.Sign(direction.y);
         }
+
+        transform.position += (Vector3)direction * moveSpeed * Time.deltaTime;
     }
 
     private void Patrol()
@@ -75,26 +76,16 @@ public class EnemyAI : MonoBehaviour
         targetPosition = new Vector2(x, y);
     }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
+    private void OnTriggerEnter2D(Collider2D other)
+    {
         if (other.CompareTag("Player"))
         {
-            Vector2 playerPos = other.transform.position;
-
             if (encounterManager != null)
             {
-                encounterManager.ChooseRandomEnemy();
+                encounterManager.ChooseRandomEnemy(); // ← Escolhe o inimigo aqui
             }
 
-            if (SceneTransitionManager.Instance != null)
-            {
-                SceneTransitionManager.Instance.ChangeScene(battleSceneName, playerPos);
-            }
-            else
-            {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(battleSceneName);
-            }
+            SceneManager.LoadScene(battleSceneName);
         }
     }
-
 }

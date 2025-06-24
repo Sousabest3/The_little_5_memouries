@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class InventorySystem : MonoBehaviour
 {
@@ -19,29 +20,65 @@ public class InventorySystem : MonoBehaviour
     public TextMeshProUGUI battleEffectsText;
 
     private List<ItemStack> inventoryItems = new List<ItemStack>();
+    private List<SlotUI> currentSlots = new List<SlotUI>();
 
-    void Awake()
-{
-    if (Instance == null)
+    private void Awake()
     {
-        Instance = this;
-        DontDestroyOnLoad(gameObject); // ← ESSENCIAL para manter o inventário entre cenas
-    }
-    else
-    {
-        Destroy(gameObject);
-    }
-
-    InitializeSlots();
-    ClearItemDetails();
-}
-
-    private void InitializeSlots()
-    {
-        for (int i = 0; i < slotsCount; i++)
+        if (Instance == null)
         {
-            Instantiate(slotPrefab, slotsContainer).GetComponent<SlotUI>().Initialize(i);
+            Instance = this;
+            DontDestroyOnLoad(transform.root.gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        TryReconnectUI();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        TryReconnectUI();
+        UpdateUI(); // Redesenha os itens após cena nova
+    }
+
+    private void TryReconnectUI()
+    {
+        // Procura pelo novo ItemsPanel (slotsContainer)
+        GameObject panel = GameObject.Find("ItemsPanel");
+        if (panel != null)
+        {
+            slotsContainer = panel.transform;
+
+            // Limpa slots antigos e recria
+            foreach (Transform child in slotsContainer)
+                Destroy(child.gameObject);
+
+            currentSlots.Clear();
+
+            for (int i = 0; i < slotsCount; i++)
+            {
+                GameObject slotGO = Instantiate(slotPrefab, slotsContainer);
+                SlotUI slot = slotGO.GetComponent<SlotUI>();
+                slot.Initialize(i);
+                currentSlots.Add(slot);
+            }
+        }
+
+        // Também tenta achar e reconectar os campos de descrição se eles estiverem nulos
+        if (itemImage == null) itemImage = GameObject.Find("ItemIcon")?.GetComponent<Image>();
+        if (itemNameText == null) itemNameText = GameObject.Find("ItemNameText")?.GetComponent<TextMeshProUGUI>();
+        if (itemDescriptionText == null) itemDescriptionText = GameObject.Find("ItemDescriptionText")?.GetComponent<TextMeshProUGUI>();
+        if (battleEffectsText == null) battleEffectsText = GameObject.Find("BattleEffectsText")?.GetComponent<TextMeshProUGUI>();
     }
 
     public bool AddItem(Item item, int amount = 1)
@@ -69,20 +106,24 @@ public class InventorySystem : MonoBehaviour
 
     private void UpdateUI()
     {
-        var slots = slotsContainer.GetComponentsInChildren<SlotUI>();
-        for (int i = 0; i < slots.Length; i++)
+        if (slotsContainer == null || currentSlots.Count == 0)
+            return;
+
+        for (int i = 0; i < currentSlots.Count; i++)
         {
             if (i < inventoryItems.Count)
-                slots[i].SetItem(inventoryItems[i]);
+                currentSlots[i].SetItem(inventoryItems[i]);
             else
-                slots[i].ClearSlot();
+                currentSlots[i].ClearSlot();
         }
 
-        ClearItemDetails(); // limpa descrição
+        ClearItemDetails();
     }
 
     public void ShowItemDetails(Item item)
     {
+        if (itemImage == null) return;
+
         itemImage.sprite = item.icon;
         itemImage.color = item.itemColor;
         itemNameText.text = item.itemName;
@@ -92,6 +133,8 @@ public class InventorySystem : MonoBehaviour
 
     public void ClearItemDetails()
     {
+        if (itemImage == null) return;
+
         itemImage.sprite = null;
         itemImage.color = new Color(1, 1, 1, 0);
         itemNameText.text = "";
@@ -129,6 +172,4 @@ public class InventorySystem : MonoBehaviour
     {
         return new List<ItemStack>(inventoryItems);
     }
-
-    
 }

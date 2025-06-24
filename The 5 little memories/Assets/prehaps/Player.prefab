@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 5645883189711160246}
   - component: {fileID: 6456220683725954112}
   - component: {fileID: 4819088846258709724}
+  - component: {fileID: 604636982860413088}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -218,7 +219,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.0053381473, y: -0.04003626}
@@ -442,6 +443,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npc: {fileID: 0}
+--- !u!114 &604636982860413088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4953107895812834541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed75350191ec3345b047ec24c4781cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 2ada072e7ead8b64493828da6acb3aaf, type: 2}
+  currentHP: 123
+  currentMP: 123
+  level: 1
+  currentXP: 0
+  xpToLevelUp: 100
 --- !u!1 &6691357209835414800
 GameObject:
   m_ObjectHideFlags: 0

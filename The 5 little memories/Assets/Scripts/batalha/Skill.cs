@@ -12,11 +12,17 @@ public class Skill
         user.UseMP(manaCost);
 
         if (isHeal)
+        {
             user.Heal(10);
+        }
         else
         {
             EnemyCombatant enemy = BattleManager.Instance.GetRandomAliveEnemy();
-            enemy.TakeDamage(15);
+            if (enemy != null)
+            {
+                enemy.TakeDamage(15);
+                BattleUI.Instance.enemyStatusUI?.UpdateUI(); // Atualiza UI do inimigo, se existir
+            }
         }
     }
 }
