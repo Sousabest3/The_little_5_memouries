@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class BattleInventory : MonoBehaviour
@@ -10,30 +11,38 @@ public class BattleInventory : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
         {
             Destroy(gameObject);
             return;
         }
-
-        // Carrega os itens assim que possível
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
+        // 🔁 Aguarda o InventorySystem estar pronto antes de carregar os itens
+        StartCoroutine(WaitForInventoryAndLoad());
+    }
+
+    private IEnumerator WaitForInventoryAndLoad()
+    {
+        // Espera até que o InventorySystem esteja carregado
+        while (InventorySystem.Instance == null)
+        {
+            yield return null; // espera um frame
+        }
+
         LoadUsableItems();
     }
 
-    /// <summary>
-    /// Substitua este método para usar seu próprio sistema de inventário!
-    /// </summary>
     public void LoadUsableItems()
     {
         usableItems.Clear();
 
-        // ⚠️ Substitua por seu próprio inventário aqui:
         List<ItemStack> allItems = InventorySystem.Instance.GetAllItems();
 
         foreach (var slot in allItems)
@@ -43,6 +52,9 @@ public class BattleInventory : MonoBehaviour
                 usableItems.Add(new ItemStack(slot.item, slot.amount));
             }
         }
+
+        // (Opcional) Debug para ver o que foi carregado
+        Debug.Log($"Usable items carregados: {usableItems.Count}");
     }
 
     public void UseItem(Item item, CharacterCombatant target)
@@ -62,5 +74,7 @@ public class BattleInventory : MonoBehaviour
         // Remove do seu inventário
         InventorySystem.Instance.RemoveItem(item, 1);
 
+        // Atualiza a lista interna (se quiser)
+        LoadUsableItems();
     }
 }

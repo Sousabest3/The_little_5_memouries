@@ -18,3 +18,7 @@ MonoBehaviour:
   battleEffect: 2+ vida
   maxStack: 5
   itemColor: {r: 1, g: 1, b: 1, a: 1}
+  effectType: 1
+  effectPower: 10
+  isKey: 0
+  keyID: 

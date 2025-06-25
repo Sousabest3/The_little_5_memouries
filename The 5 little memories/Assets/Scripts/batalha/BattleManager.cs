@@ -8,11 +8,15 @@ public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance;
 
+    [Header("Combatants")]
     public PlayerCombatant player;
     public PlayerCombatant ally;
 
+    [Header("Enemy")]
     public EnemyCombatant enemyPrefab;
     public BattleEncounterManager encounterManager;
+
+    [Header("UI")]
     public BattleUI battleUI;
 
     private List<EnemyCombatant> enemies = new List<EnemyCombatant>();
@@ -26,9 +30,11 @@ public class BattleManager : MonoBehaviour
 
     private void Start()
     {
+        // Inicializa os combatentes
         player.Init();
         ally.Init();
 
+        // Spawna o inimigo baseado na escolha feita antes
         if (encounterManager != null && encounterManager.chosenEnemy != null)
         {
             EnemyCombatant newEnemy = Instantiate(enemyPrefab, new Vector3(2f, 0, 0), Quaternion.identity);
@@ -37,6 +43,7 @@ public class BattleManager : MonoBehaviour
             enemies.Add(newEnemy);
         }
 
+        // Configura a UI e inicia o loop da batalha
         battleUI.Setup(player, ally, enemies.ToArray());
         StartCoroutine(BattleLoop());
     }
@@ -73,24 +80,67 @@ public class BattleManager : MonoBehaviour
     }
 
     public void CheckBattleEnd()
-    {
-        bool allEnemiesDead = enemies.TrueForAll(e => !e.IsAlive);
-        bool allPlayersDead = !player.IsAlive && !ally.IsAlive;
+{
+    bool allEnemiesDead = enemies.TrueForAll(e => !e.IsAlive);
+    bool allPlayersDead = !player.IsAlive && !ally.IsAlive;
 
-        if (allEnemiesDead)
+    if (allEnemiesDead && !battleEnded)
+    {
+        battleEnded = true;
+
+        // ✅ Dá XP à party (podes ajustar o valor depois)
+        GiveXPToParty(50);
+
+        // ✅ Marca o inimigo como derrotado
+        if (SceneMemory.Instance != null &&
+            EnemyStateManager.Instance != null &&
+            !string.IsNullOrEmpty(SceneMemory.Instance.lastEnemyID))
         {
-            SceneManager.LoadScene("VictoryScene");
-            battleEnded = true;
+            EnemyStateManager.Instance.MarkDefeated(SceneMemory.Instance.lastEnemyID);
         }
-        else if (allPlayersDead)
-        {
-            SceneManager.LoadScene("GameOverScene");
-            battleEnded = true;
-        }
+
+        // ✅ Vai para a cena de vitória (VictoryScreenUI mostra os detalhes)
+        SceneManager.LoadScene("VictoryScene");
     }
+    else if (allPlayersDead && !battleEnded)
+    {
+        battleEnded = true;
+        SceneManager.LoadScene("GameOverScene");
+    }
+}
 
     public EnemyCombatant GetRandomAliveEnemy()
     {
         return enemies.Where(e => e.IsAlive).OrderBy(e => Random.value).FirstOrDefault();
+    }
+
+    public void GiveXPToParty(int xpAmount)
+    {
+        if (VictoryTracker.Instance == null) return;
+
+        VictoryTracker.Instance.Clear();
+        var party = new List<PlayerCombatant> { player, ally };
+
+        foreach (var member in party)
+        {
+            if (!member.IsAlive) continue;
+
+            var stats = new VictoryStats
+            {
+                characterName = member.data.characterName,
+                xpGained = xpAmount,
+                levelBefore = member.level,
+                hpBefore = member.data.maxHP,
+                atkBefore = member.data.attack
+            };
+
+            member.AddXP(xpAmount);
+
+            stats.levelAfter = member.level;
+            stats.hpAfter = member.data.maxHP;
+            stats.atkAfter = member.data.attack;
+
+            VictoryTracker.Instance.results.Add(stats);
+        }
     }
 }
