@@ -5,11 +5,8 @@ public class CurrencySystem : MonoBehaviour
 {
     public static CurrencySystem Instance { get; private set; }
 
-    [Header("Configuração")]
     [SerializeField] private int startingGold = 0;
-
-    [Header("UI")]
-    [SerializeField] private TMP_Text goldText; // único campo válido
+    [SerializeField] private TextMeshProUGUI goldText;
 
     private int currentGold;
 
@@ -30,6 +27,7 @@ public class CurrencySystem : MonoBehaviour
     public void AddGold(int amount)
     {
         currentGold += amount;
+        Debug.Log($"💰 Recebeu {amount} Gold. Total: {currentGold}");
         UpdateUI();
     }
 
@@ -42,21 +40,22 @@ public class CurrencySystem : MonoBehaviour
             return true;
         }
 
-        Debug.Log("Não há dinheiro suficiente!");
+        Debug.Log("⚠️ Dinheiro insuficiente.");
         return false;
-    }
-
-    public int GetGold()
-    {
-        return currentGold;
     }
 
     public void UpdateUI()
     {
         if (goldText != null)
             goldText.text = $"Gold: {currentGold}";
+    }
 
-        if (ShopSystem.Instance != null)
-            ShopSystem.Instance.UpdateGoldUI();
+    public int GetGold() => currentGold;
+
+    // ✅ Adicionado para permitir carregar gold do save
+    public void SetGold(int value)
+    {
+        currentGold = value;
+        UpdateUI();
     }
 }

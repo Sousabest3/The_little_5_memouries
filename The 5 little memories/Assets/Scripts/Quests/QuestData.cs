@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public enum QuestType { KillEnemies, CollectItem }
+public enum QuestType { CollectItem }
 
-[CreateAssetMenu(menuName = "Quest/New Quest")]
+[CreateAssetMenu(menuName = "Quest/Nova Missão")]
 public class QuestData : ScriptableObject
 {
     public string questId;
     public string questName;
     [TextArea] public string description;
 
-    public QuestType questType;
+    public QuestType questType = QuestType.CollectItem;
+
     public int requiredAmount = 1;
     public Item requiredItem;
 
     public int rewardMoney;
-    public string targetEnemyTag; // Para quests de matar inimigos
 }

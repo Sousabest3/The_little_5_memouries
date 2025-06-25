@@ -32,21 +32,13 @@ public class QuestGiver : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("Missão em andamento...");
+            DialogueManager.Instance.StartDialogue(dialogueData.dialogueLines, dialogueData.npcName, dialogueData.npcPortrait);
         }
     }
 
     private bool IsQuestReadyToComplete()
     {
         var quest = dialogueData.quest;
-        switch (quest.questType)
-        {
-            case QuestType.KillEnemies:
-                return QuestManager.Instance.GetEnemyKillCount(quest.targetEnemyTag) >= quest.requiredAmount;
-            case QuestType.CollectItem:
-                return InventorySystem.Instance.HasItem(quest.requiredItem, quest.requiredAmount);
-            default:
-                return false;
-        }
+        return InventorySystem.Instance.HasItem(quest.requiredItem, quest.requiredAmount);
     }
 }

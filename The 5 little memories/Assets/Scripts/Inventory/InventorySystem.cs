@@ -172,4 +172,16 @@ public class InventorySystem : MonoBehaviour
     {
         return new List<ItemStack>(inventoryItems);
     }
+
+    public int GetItemCount(Item item)
+{
+    foreach (var stack in inventoryItems)
+    {
+        if (stack.item == item)
+            return stack.amount;
+    }
+
+    return 0;
+}
+
 }

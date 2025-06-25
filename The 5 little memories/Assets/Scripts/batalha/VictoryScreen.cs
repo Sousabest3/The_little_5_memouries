@@ -38,6 +38,6 @@ public class VictoryScreen : MonoBehaviour
 
     void ReturnToGame()
     {
-        SceneManager.LoadScene("Outside"); // ou o nome da sua cena principal
+        SceneManager.LoadScene("Florest2"); // ou o nome da sua cena principal
     }
 }

@@ -1,17 +1,20 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance;
 
+    [Header("UI")]
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
     public TMP_Text nameText;
     public Image portraitImage;
 
+    [Header("Configuração")]
     public KeyCode advanceKey = KeyCode.E;
 
     private Coroutine typingCoroutine;
@@ -24,11 +27,44 @@ public class DialogueManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        {
             Destroy(gameObject);
+            return;
+        }
 
-        dialoguePanel.SetActive(false);
+        TryReconnectUI();
+        HidePanel();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"🌀 Cena carregada: {scene.name}");
+        TryReconnectUI();
+        HidePanel();
+    }
+
+    private void HidePanel()
+    {
+        if (dialoguePanel != null)
+        {
+            dialoguePanel.SetActive(false);
+            Debug.Log("👁 Painel de diálogo ocultado.");
+        }
     }
 
     private void Update()
@@ -41,13 +77,33 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(DialogueLine[] lines, string npcName, Sprite portrait, System.Action onFinish = null)
     {
+        TryReconnectUI(); // reconecta sempre que for iniciar
+
+        if (lines == null || lines.Length == 0)
+        {
+            Debug.LogWarning("🛑 Nenhuma linha de diálogo fornecida.");
+            return;
+        }
+
+        if (dialoguePanel == null || dialogueText == null || nameText == null)
+        {
+            Debug.LogError("❌ DialogueManager: UI ainda não atribuída. Verifique se os nomes dos objetos estão corretos.");
+            return;
+        }
+
+        Debug.Log("✅ Ativando painel de diálogo...");
         dialoguePanel.SetActive(true);
         currentLines = lines;
         currentIndex = 0;
         IsDialoguePlaying = true;
+
         nameText.text = npcName;
-        portraitImage.sprite = portrait;
+
+        if (portraitImage != null && portrait != null)
+            portraitImage.sprite = portrait;
+
         onDialogueComplete = onFinish;
+
         ShowLine();
     }
 
@@ -91,8 +147,35 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        dialoguePanel.SetActive(false);
+        if (dialoguePanel != null)
+            dialoguePanel.SetActive(false);
+
         IsDialoguePlaying = false;
         onDialogueComplete?.Invoke();
+    }
+
+    void TryReconnectUI()
+    {
+        GameObject canvas = GameObject.Find("Canvas (1)");
+        if (canvas == null)
+        {
+            Debug.LogWarning("⚠️ Canvas não encontrado na cena.");
+            return;
+        }
+
+        Transform panelTransform = canvas.transform.Find("DialoguePanel");
+        if (panelTransform != null)
+        {
+            dialoguePanel = panelTransform.gameObject;
+            dialogueText = panelTransform.Find("DialogueText")?.GetComponent<TMP_Text>();
+            nameText = panelTransform.Find("NPCNameText")?.GetComponent<TMP_Text>();
+            portraitImage = panelTransform.Find("Image")?.GetComponent<Image>();
+
+            Debug.Log("✅ UI reconectada com sucesso.");
+        }
+        else
+        {
+            Debug.LogWarning("⚠️ Dialogue Panel não encontrado dentro do Canvas.");
+        }
     }
 }

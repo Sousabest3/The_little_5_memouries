@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d4f567d6be929841aa5b25cc07147e7, type: 3}
   m_Name: New Character Base 2
   m_EditorClassIdentifier: 
-  characterName: poia
+  characterName: mari
   portrait: {fileID: 1995177046, guid: e514271683fbad349922ad3ecab8ab7e, type: 3}
+  hurtPortrait: {fileID: 0}
+  healPortrait: {fileID: 0}
   maxHP: 1000
   maxMP: 2121
   attack: 211212

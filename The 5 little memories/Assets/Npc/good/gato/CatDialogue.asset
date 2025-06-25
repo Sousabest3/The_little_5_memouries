@@ -25,7 +25,7 @@ MonoBehaviour:
     autoProgressDelay: 1.5
   - text: "Ol\xE1 gatito"
     npcExpression: {fileID: 0}
-    playerExpression: {fileID: 21300000, guid: d41b509f16e7fb549819d01f748a5a2d, type: 3}
+    playerExpression: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
     isPlayerSpeaking: 1
     typingSpeed: 0.05
     autoProgress: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
     autoProgressDelay: 1.5
   - text: sim e ctg
     npcExpression: {fileID: 0}
-    playerExpression: {fileID: 21300000, guid: 16d0f759013669f489b0cb3ae125d2b3, type: 3}
+    playerExpression: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
     isPlayerSpeaking: 1
     typingSpeed: 0.05
     autoProgress: 0

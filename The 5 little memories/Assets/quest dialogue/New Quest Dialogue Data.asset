@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41cfd75c4a589e143a159aa2d547e2e5, type: 3}
   m_Name: New Quest Dialogue Data
   m_EditorClassIdentifier: 
-  quest: {fileID: 11400000, guid: f8d1f27d9a394874e90e4ca2c17ff248, type: 2}
+  quest: {fileID: 11400000, guid: 62f00b8f1cf8d5745b69f3f41e7ddafd, type: 2}
   npcName: maria
   npcPortrait: {fileID: 1995177046, guid: e514271683fbad349922ad3ecab8ab7e, type: 3}
   dialogueLines:

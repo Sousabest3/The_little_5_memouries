@@ -33,12 +33,14 @@ public class NPCController2D : MonoBehaviour, IInteractable
     private bool isTyping = false;
     private bool isDialogueActive = false;
     private bool isFollowing = false;
-    private Vector3 velocity;
+    private bool goingToBattle = false;
 
     private Queue<Vector3> positionHistory = new Queue<Vector3>();
     private float recordTimer;
+    private Vector2 lastMoveDirection;
 
     private Collider2D npcCollider;
+    private SpriteRenderer spriteRenderer;
     private PlayerMovement playerMovement;
 
     private void Awake()
@@ -51,7 +53,14 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
         animator = GetComponent<Animator>();
         npcCollider = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         dialoguePanel.SetActive(false);
+
+        if (canFollowAfterDialogue)
+        {
+            transform.SetParent(null); // Garante que está na raiz da cena
+            DontDestroyOnLoad(gameObject);
+        }
 
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -162,7 +171,6 @@ public class NPCController2D : MonoBehaviour, IInteractable
             }
 
             FollowingNPC = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -193,37 +201,83 @@ public class NPCController2D : MonoBehaviour, IInteractable
     }
 
     private void UpdateAnimation(Vector2 move)
+{
+    animator.SetFloat("MoveX", move.x);
+    animator.SetFloat("MoveY", move.y);
+    animator.SetFloat("MoveSpeed", move.magnitude);
+
+    if (move.magnitude > 0.01f)
     {
-        animator.SetFloat("MoveX", move.x);
-        animator.SetFloat("MoveY", move.y);
-        animator.SetFloat("MoveSpeed", move.magnitude);
+        lastMoveDirection = move;
+        animator.SetFloat("LastMoveX", lastMoveDirection.x);
+        animator.SetFloat("LastMoveY", lastMoveDirection.y);
+
+        // Flip se estiver a mover para a esquerda
+        if (spriteRenderer != null)
+            spriteRenderer.flipX = move.x < 0;
     }
+}
 
     private void FindPlayer()
     {
+        if (player != null) return;
+
         var playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
             player = playerObj.transform;
             playerMovement = playerObj.GetComponent<PlayerMovement>();
         }
+        else
+        {
+            Debug.LogWarning("⚠️ NPCController2D: Player não encontrado.");
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // ✅ DESTROI O NPC SE ESTIVER A SEGUIR E A CENA FOR DE BATALHA
-        if (isFollowing && scene.name == "Battle")
+        if (scene.name == "Battle")
         {
-            Destroy(gameObject);
+            if (isFollowing)
+            {
+                goingToBattle = true;
+                spriteRenderer.enabled = false;
+                animator.enabled = false;
+                npcCollider.enabled = false;
+                this.enabled = false;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+
             return;
         }
 
-        FindPlayer();
+        StartCoroutine(SnapToPlayerAfterLoad());
+    }
 
-        if (isFollowing && player != null)
+    private IEnumerator SnapToPlayerAfterLoad()
+    {
+        yield return null;
+
+        FindPlayer();
+        if (player == null) yield break;
+
+        if (isFollowing)
         {
             transform.position = player.position + new Vector3(1.2f, 0f, 0f);
             positionHistory.Clear();
+            positionHistory.Enqueue(player.position);
+        }
+
+        if (goingToBattle && isFollowing)
+        {
+            goingToBattle = false;
+            spriteRenderer.enabled = true;
+            animator.enabled = true;
+            npcCollider.enabled = false;
+            this.enabled = true;
         }
     }
 }

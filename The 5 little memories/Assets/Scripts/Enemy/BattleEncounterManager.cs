@@ -8,13 +8,13 @@ public class BattleEncounterManager : ScriptableObject
 
     public void ChooseRandomEnemy()
     {
-        if (enemyPool.Length > 0)
+        if (enemyPool != null && enemyPool.Length > 0)
         {
             chosenEnemy = enemyPool[Random.Range(0, enemyPool.Length)];
         }
         else
         {
-            Debug.LogWarning("enemyPool está vazio!");
+            Debug.LogWarning("❌ enemyPool está vazio no BattleEncounterManager!");
         }
     }
 }
