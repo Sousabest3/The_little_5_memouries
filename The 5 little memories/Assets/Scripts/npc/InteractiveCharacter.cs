@@ -10,13 +10,8 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     [System.Serializable]
     public class FollowSettings
     {
-        [Tooltip("Enable NPC to follow player after dialogue?")]
         public bool enableFollow = true;
-        
-        [Tooltip("Prefab of the NPC follower")]
         public GameObject followerPrefab;
-        
-        [Tooltip("Following distance from player")]
         [Range(1f, 3f)] public float followDistance = 1.8f;
     }
 
@@ -37,7 +32,6 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     [Header("Follow System")]
     [SerializeField] private FollowSettings followSettings;
 
-    // State variables
     private int _currentDialogueIndex;
     private bool _isTyping, _isInteracting, _waitingForInput;
     private float _lastInteractionTime;
@@ -46,7 +40,6 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        // Set up input action
         _interactAction = new InputAction(binding: "<Keyboard>/e");
         _interactAction.performed += ctx => OnInteractPerformed();
     }
@@ -55,7 +48,7 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     {
         dialogueCanvas?.SetActive(false);
         _playerMovement = FindObjectOfType<PlayerMovement>();
-        
+
         if (advancePrompt != null)
             advancePrompt.SetActive(false);
     }
@@ -69,9 +62,9 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     {
         if (dialogueData == null || !CanInteract()) return;
 
-        if (_isInteracting) 
+        if (_isInteracting)
             AdvanceDialogue();
-        else 
+        else
             StartDialogue();
     }
 
@@ -95,7 +88,7 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
 
         _playerMovement?.SetCanMove(false);
         dialogueCanvas.SetActive(true);
-        
+
         UpdateDialogueUI();
         StartCoroutine(TypeDialogue());
     }
@@ -104,26 +97,26 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     {
         _isTyping = true;
         _waitingForInput = false;
-        
-        DialogueData.Line currentLine = dialogueData.lines[_currentDialogueIndex];
+
+        var line = dialogueData.lines[_currentDialogueIndex];
         dialogueText.text = "";
 
-        foreach (char c in currentLine.text)
+        foreach (char c in line.text)
         {
             dialogueText.text += c;
-            yield return new WaitForSeconds(currentLine.typeSpeed);
+            yield return new WaitForSeconds(line.typeSpeed);
         }
 
         _isTyping = false;
 
-        if (!currentLine.autoAdvance)
+        if (!line.autoAdvance)
         {
             ShowAdvancePrompt(true);
             _waitingForInput = true;
         }
         else
         {
-            yield return new WaitForSeconds(currentLine.advanceDelay);
+            yield return new WaitForSeconds(line.advanceDelay);
             AdvanceDialogue();
         }
     }
@@ -144,7 +137,7 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
         }
 
         _currentDialogueIndex++;
-        
+
         if (_currentDialogueIndex < dialogueData.lines.Length)
         {
             UpdateDialogueUI();
@@ -160,7 +153,7 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     {
         ShowAdvancePrompt(false);
         StopAllCoroutines();
-        
+
         _isInteracting = false;
         dialogueCanvas.SetActive(false);
         _playerMovement?.SetCanMove(true);
@@ -170,15 +163,26 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     }
     #endregion
 
-    #region Helper Methods
+    #region Helpers
     private void UpdateDialogueUI()
     {
-        DialogueData.Line line = dialogueData.lines[_currentDialogueIndex];
-        
-        nameText.text = line.isPlayerSpeaking ? "Player" : dialogueData.characterName;
-        portraitImage.sprite = line.isPlayerSpeaking 
-            ? (line.playerExpression ?? dialogueData.defaultPlayerExpression) 
-            : (line.npcExpression ?? dialogueData.defaultNPCExpression);
+        var line = dialogueData.lines[_currentDialogueIndex];
+
+        switch (line.speaker)
+        {
+            case DialogueData.SpeakerType.Player:
+                nameText.text = dialogueData.playerName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultPlayerPortrait;
+                break;
+            case DialogueData.SpeakerType.NPC:
+                nameText.text = dialogueData.npcName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultNPCPortrait;
+                break;
+            case DialogueData.SpeakerType.Ally:
+                nameText.text = dialogueData.allyName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultAllyPortrait;
+                break;
+        }
     }
 
     private void ShowAdvancePrompt(bool show)
@@ -189,14 +193,10 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
 
     private void SpawnFollower()
     {
-        if (followSettings.followerPrefab == null || _playerMovement == null) 
+        if (followSettings.followerPrefab == null || _playerMovement == null)
             return;
 
-        GameObject follower = Instantiate(
-            followSettings.followerPrefab,
-            transform.position,
-            Quaternion.identity
-        );
+        GameObject follower = Instantiate(followSettings.followerPrefab, transform.position, Quaternion.identity);
 
         var followerAI = follower.GetComponent<AdvancedNPCFollower>();
         if (followerAI != null)
@@ -209,6 +209,5 @@ public class InteractiveCharacter : MonoBehaviour, IInteractable
     }
     #endregion
 
-    // IInteractable implementation
     public void Interact() => OnInteractPerformed();
 }

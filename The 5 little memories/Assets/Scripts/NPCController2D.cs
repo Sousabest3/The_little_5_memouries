@@ -11,7 +11,7 @@ public class NPCController2D : MonoBehaviour, IInteractable
     public static NPCController2D FollowingNPC;
 
     [Header("Dialogue Settings")]
-    public NPCDialogue dialogueData;
+    public DialogueData dialogueData;
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
     public TMP_Text nameText;
@@ -37,7 +37,7 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
     private Queue<Vector3> positionHistory = new Queue<Vector3>();
     private float recordTimer;
-    private Vector2 lastMoveDirection;
+    private Vector2 lastMoveInput;
 
     private Collider2D npcCollider;
     private SpriteRenderer spriteRenderer;
@@ -58,7 +58,7 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
         if (canFollowAfterDialogue)
         {
-            transform.SetParent(null); // Garante que está na raiz da cena
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
         }
 
@@ -108,21 +108,34 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
     private void ShowLine()
     {
-        DialogueLine line = dialogueData.dialogueLines[currentLineIndex];
-        nameText.text = line.isPlayerSpeaking ? "Player" : dialogueData.npcName;
-        portraitImage.sprite = line.isPlayerSpeaking
-            ? (line.playerExpression ?? dialogueData.defaultPlayerExpression)
-            : (line.npcExpression ?? dialogueData.defaultNPCExpression);
+        var line = dialogueData.lines[currentLineIndex];
+
+        // Define nome e imagem com base no speaker
+        switch (line.speaker)
+        {
+            case DialogueData.SpeakerType.Player:
+                nameText.text = dialogueData.playerName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultPlayerPortrait;
+                break;
+            case DialogueData.SpeakerType.NPC:
+                nameText.text = dialogueData.npcName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultNPCPortrait;
+                break;
+            case DialogueData.SpeakerType.Ally:
+                nameText.text = dialogueData.allyName;
+                portraitImage.sprite = line.portrait ?? dialogueData.defaultAllyPortrait;
+                break;
+        }
 
         if (typingCoroutine != null) StopCoroutine(typingCoroutine);
         typingCoroutine = StartCoroutine(TypeLine(line));
     }
 
-    private IEnumerator TypeLine(DialogueLine line)
+    private IEnumerator TypeLine(DialogueData.Line line)
     {
         isTyping = true;
         dialogueText.text = "";
-        float speed = Mathf.Max(0.01f, line.typingSpeed);
+        float speed = Mathf.Max(0.01f, line.typeSpeed);
 
         foreach (char c in line.text)
         {
@@ -132,9 +145,9 @@ public class NPCController2D : MonoBehaviour, IInteractable
 
         isTyping = false;
 
-        if (line.autoProgress)
+        if (line.autoAdvance)
         {
-            yield return new WaitForSeconds(line.autoProgressDelay);
+            yield return new WaitForSeconds(line.advanceDelay);
             NextLine();
         }
     }
@@ -142,7 +155,7 @@ public class NPCController2D : MonoBehaviour, IInteractable
     private void NextLine()
     {
         currentLineIndex++;
-        if (currentLineIndex < dialogueData.dialogueLines.Length)
+        if (currentLineIndex < dialogueData.lines.Length)
         {
             ShowLine();
         }
@@ -200,23 +213,20 @@ public class NPCController2D : MonoBehaviour, IInteractable
         }
     }
 
-    private void UpdateAnimation(Vector2 move)
-{
-    animator.SetFloat("MoveX", move.x);
-    animator.SetFloat("MoveY", move.y);
-    animator.SetFloat("MoveSpeed", move.magnitude);
-
-    if (move.magnitude > 0.01f)
+    private void UpdateAnimation(Vector2 input)
     {
-        lastMoveDirection = move;
-        animator.SetFloat("LastMoveX", lastMoveDirection.x);
-        animator.SetFloat("LastMoveY", lastMoveDirection.y);
+        bool isWalking = input != Vector2.zero;
+        animator.SetBool("IsWalking", isWalking);
 
-        // Flip se estiver a mover para a esquerda
-        if (spriteRenderer != null)
-            spriteRenderer.flipX = move.x < 0;
+        if (isWalking)
+        {
+            animator.SetFloat("InputX", input.x);
+            animator.SetFloat("InputY", input.y);
+            lastMoveInput = input;
+            animator.SetFloat("LastInputX", input.x);
+            animator.SetFloat("LastInputY", input.y);
+        }
     }
-}
 
     private void FindPlayer()
     {
