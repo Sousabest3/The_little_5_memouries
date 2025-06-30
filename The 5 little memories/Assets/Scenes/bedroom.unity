@@ -409,7 +409,7 @@ MonoBehaviour:
   lockedMessage: "Est\xE1 trancada. Precisas de uma chave."
   unlockedMessage: Usaste a chave.
   nextSceneName: Outside
-  spawnPosition: {x: 0, y: 0}
+  spawnPosition: {x: 0.45, y: -0.45}
   doorAnimator: {fileID: 0}
   openTriggerName: Open
   waitBeforeSceneLoad: 1
