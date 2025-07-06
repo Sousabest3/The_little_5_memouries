@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de175de6a50271746bb7586cb52d9aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 1
+  fadeSpeed: 0.5
   fadeColor: {r: 0, g: 0, b: 0, a: 1}
   playerTag: Player

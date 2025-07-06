@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: New Quest Dialogue Data
   m_EditorClassIdentifier: 
   quest: {fileID: 11400000, guid: 62f00b8f1cf8d5745b69f3f41e7ddafd, type: 2}
-  npcName: maria
+  npcName: Max
   npcPortrait: {fileID: 1995177046, guid: e514271683fbad349922ad3ecab8ab7e, type: 3}
   dialogueLines:
   - text: ndjsnnjvndsnjvn
