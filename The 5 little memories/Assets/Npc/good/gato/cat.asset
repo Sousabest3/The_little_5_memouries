@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9f67ee0943847429442dceb07b2849, type: 3}
+  m_Name: cat
+  m_EditorClassIdentifier: 
+  npcName: Gato
+  allyName: Ally
+  playerName: Mari
+  defaultNPCPortrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+  defaultAllyPortrait: {fileID: 0}
+  defaultPlayerPortrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+  lines:
+  - text: Bem vinda
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0.01
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "J\xE1 n\xE3o a via \xE0 algum tempo,\nAconteceu alguma coisa?"
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0.01
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Eu conhe\xE7o-te?"
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: E onde estou?
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Em casa, n\xE3o se lembra mesmo de nada?"
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "N\xE3o faz mal,\nvou ajud\xE1-la"
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Tem uma pessoa a esperar por ti l\xE1 \xE0 frente"
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: Obrigado pela ajuda, gato falante
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: De nada, Mari
+    speaker: 1
+    portrait: {fileID: 21300000, guid: eab6ba18130d1e24bbbeca81e4d00a05, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}

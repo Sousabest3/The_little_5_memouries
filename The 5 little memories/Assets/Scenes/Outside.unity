@@ -52362,9 +52362,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemsForSale:
   - item: {fileID: 11400000, guid: 93226588d2f038045b73f6cbfcc546c1, type: 2}
-    price: 0
+    price: 20
   - item: {fileID: 11400000, guid: b48bcf820287c084ca051578c66c5606, type: 2}
-    price: 30
+    price: 10
   shopPanel: {fileID: 1307218073}
   itemListContainer: {fileID: 1195287440}
   shopItemPrefab: {fileID: 4671306059657169995, guid: 407cdf96f6286cf46a551cb473a8c0b4, type: 3}
@@ -52699,7 +52699,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 516, y: 234}
+  m_AnchoredPosition: {x: 774, y: 344}
   m_SizeDelta: {x: 39.2638, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &352276150
@@ -52830,7 +52830,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000017166138, y: -0.000016212463}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &413643969
@@ -53130,7 +53130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -475.2813, y: 221.97952}
+  m_AnchoredPosition: {x: -650, y: 290.23}
   m_SizeDelta: {x: 100, y: 36.4666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &600324421
@@ -53216,7 +53216,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: -0.000030517578, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -53470,7 +53470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5165aed8a4218e49ac183de770683a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueData: {fileID: 0}
+  dialogueData: {fileID: 11400000, guid: 6aea481efce20e14782480cfb2a6fb1c, type: 2}
   dialoguePanel: {fileID: 2075826014}
   dialogueText: {fileID: 1720210188}
   nameText: {fileID: 133833522}
@@ -82770,7 +82770,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -234.66173, y: -31.240896}
+  m_AnchoredPosition: {x: -337.66, y: -2}
   m_SizeDelta: {x: 425.6735, y: 430.4798}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1195287441
@@ -82950,7 +82950,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1307218074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83656,7 +83656,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 272.6428, y: 0}
+  m_AnchoredPosition: {x: 394, y: -2}
   m_SizeDelta: {x: -545.2855, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1782191971
@@ -84279,9 +84279,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed75350191ec3345b047ec24c4781cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: e14321bc91216514790519ab71732e2a, type: 2}
-  currentHP: 0
-  currentMP: 0
+  data: {fileID: 11400000, guid: 727a44abb2a40aa4594322e4a94b52e1, type: 2}
+  currentHP: 90
+  currentMP: 20
   level: 1
   currentXP: 0
   xpToLevelUp: 100
@@ -86823,7 +86823,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 209}
+  m_AnchoredPosition: {x: 49, y: 398}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1964678910

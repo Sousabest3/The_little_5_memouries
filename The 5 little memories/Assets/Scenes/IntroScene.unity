@@ -338,7 +338,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 689136272}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 6ad4dc59b3659cc4c98e1895bb7589d4, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 1a0fdfd94e03fb54993456e220613333, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -399,7 +399,7 @@ PlayableDirector:
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: 5085562895677059569, guid: 9457b99d8d05e41468b8a47462d970a3, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 689136272}
   m_ExposedReferences:
     m_References:
     - 01e6209171e5f8b4ea183e5f7dc90de9: {fileID: 0}
@@ -531,8 +531,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsContainer: {fileID: 0}
-  slotPrefab: {fileID: 0}
-  slotsCount: 24
+  slotPrefab: {fileID: 8702567081433963299, guid: ea1d543353b09714da7ef554c0993143, type: 3}
+  slotsCount: 50
   itemImage: {fileID: 0}
   itemNameText: {fileID: 0}
   itemDescriptionText: {fileID: 0}

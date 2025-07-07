@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quest: {fileID: 11400000, guid: 62f00b8f1cf8d5745b69f3f41e7ddafd, type: 2}
   npcName: Max
-  npcPortrait: {fileID: 1995177046, guid: e514271683fbad349922ad3ecab8ab7e, type: 3}
+  npcPortrait: {fileID: 21300000, guid: 5b1c24fe94ecf844dbb3f9c8af0266f8, type: 3}
   dialogueLines:
   - text: ndjsnnjvndsnjvn
     npcExpression: {fileID: 0}

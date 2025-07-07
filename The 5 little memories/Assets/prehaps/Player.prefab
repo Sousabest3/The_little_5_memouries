@@ -455,9 +455,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed75350191ec3345b047ec24c4781cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 2ada072e7ead8b64493828da6acb3aaf, type: 2}
-  currentHP: 123
-  currentMP: 123
+  data: {fileID: 11400000, guid: 24abca4c20b679c42a4e6d39ea254f46, type: 2}
+  currentHP: 100
+  currentMP: 30
   level: 1
   currentXP: 0
   xpToLevelUp: 100

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34f7c7b5a5f6d54d94b79cf526c8387, type: 3}
   m_Name: "Po\xE7\xE3o"
   m_EditorClassIdentifier: 
-  itemId: 
+  itemId: 90
   itemName: "po\xE7\xE3o"
   icon: {fileID: -1524527033, guid: e0491fd5735becd46bb56f4de1b447cd, type: 3}
   description: "Po\xE7\xE3o que cura at\xE9 as feridas mais profundas"

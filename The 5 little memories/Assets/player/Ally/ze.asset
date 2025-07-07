@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9f67ee0943847429442dceb07b2849, type: 3}
+  m_Name: ze
+  m_EditorClassIdentifier: 
+  npcName: NPC
+  allyName: "Z\xE9"
+  playerName: Mari
+  defaultNPCPortrait: {fileID: 0}
+  defaultAllyPortrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+  defaultPlayerPortrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+  lines:
+  - text: ZEEEE
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "H\xE1 quanto tempo"
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: MARIII
+    speaker: 2
+    portrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: Tudo bem contigo?
+    speaker: 2
+    portrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: Sim, sIm
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Que lugar \xE9 este?"
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Tamb\xE9m n\xE3o sei"
+    speaker: 2
+    portrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: "Cheguei \xE0 pouco tempo"
+    speaker: 2
+    portrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: 'Podemos descobrir juntos...
+
+      Queres?'
+    speaker: 2
+    portrait: {fileID: 21300000, guid: 17a67cf2bb5c16943a9b71753edd9534, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}
+  - text: VAMOS
+    speaker: 0
+    portrait: {fileID: 21300000, guid: 644df069927acde4aa82e359f4d3fbeb, type: 3}
+    typeSpeed: 0
+    autoAdvance: 0
+    advanceDelay: 0
+    voiceSound: {fileID: 0}

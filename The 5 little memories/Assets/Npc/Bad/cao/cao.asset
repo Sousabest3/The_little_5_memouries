@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4f567d6be929841aa5b25cc07147e7, type: 3}
+  m_Name: cao
+  m_EditorClassIdentifier: 
+  characterName: "C\xE3o Vadio"
+  portrait: {fileID: 2115314918, guid: d485e107c49f70740a1834c67aa206da, type: 3}
+  hurtPortrait: {fileID: 1141782015, guid: d485e107c49f70740a1834c67aa206da, type: 3}
+  healPortrait: {fileID: 2115314918, guid: d485e107c49f70740a1834c67aa206da, type: 3}
+  maxHP: 300
+  maxMP: 40
+  attack: 13
+  skills: []

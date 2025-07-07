@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: NewWorldDialogue
   m_EditorClassIdentifier: 
   lines:
-  - text: 'knnnasfanf
-
-'
+  - text: Apanhas-te um item
     typingSpeed: 0
     autoProgress: 0
     autoProgressDelay: 0

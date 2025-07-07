@@ -15,4 +15,8 @@ MonoBehaviour:
   enemyPool:
   - {fileID: 11400000, guid: f439745a3bb1d9b4ea9f0726f53bf042, type: 2}
   - {fileID: 11400000, guid: a66a8dd4d74530744b4ee74122602527, type: 2}
+  - {fileID: 11400000, guid: 4f99e723faa92784f8e79c285481b402, type: 2}
+  - {fileID: 11400000, guid: 62826c114d73fa14eb6653e6416474ee, type: 2}
+  - {fileID: 11400000, guid: 437ad00f8eb6d9749a21bf59aa4dc729, type: 2}
+  - {fileID: 11400000, guid: 2549a7fe9d3815e4ea5840a8bd40540d, type: 2}
   chosenEnemy: {fileID: 0}
