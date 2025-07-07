@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class ScenePortal : MonoBehaviour
 {
@@ -24,7 +25,12 @@ public class ScenePortal : MonoBehaviour
     [TextArea] public string missingFollowerMessage = "Preciso de alguém comigo para seguir em frente.";
 
     [Header("Blocker (Optional)")]
-    public GameObject blockerWall; // parede invisível opcional
+    public GameObject blockerWall;
+
+    [Header("Missing Message UI")]
+    public GameObject missingMessageUI;
+    public TMP_Text missingMessageText;
+    public float messageDuration = 2.5f;
 
     [Header("Events")]
     public UnityEvent onPortalActivated;
@@ -34,6 +40,7 @@ public class ScenePortal : MonoBehaviour
     private bool playerInRange;
     private GameObject playerObj;
     private Collider2D portalCollider;
+    private float messageTimer;
 
     void Awake()
     {
@@ -46,9 +53,11 @@ public class ScenePortal : MonoBehaviour
         if (interactionPrompt != null)
             interactionPrompt.SetActive(false);
 
-        // Se for necessário NPC e ele ainda não está a seguir, mantém bloqueado
         if (blockerWall != null)
             blockerWall.SetActive(requireFollower);
+
+        if (missingMessageUI != null)
+            missingMessageUI.SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -62,7 +71,7 @@ public class ScenePortal : MonoBehaviour
 
         if (requireFollower && NPCController2D.FollowingNPC != null && blockerWall != null)
         {
-            blockerWall.SetActive(false); // Remove a barreira se o NPC estiver a seguir
+            blockerWall.SetActive(false);
         }
 
         if (!requireInteraction)
@@ -93,6 +102,14 @@ public class ScenePortal : MonoBehaviour
         {
             TryActivatePortal();
         }
+
+        // Oculta mensagem na tela após delay
+        if (missingMessageUI != null && missingMessageUI.activeSelf)
+        {
+            messageTimer -= Time.deltaTime;
+            if (messageTimer <= 0f)
+                missingMessageUI.SetActive(false);
+        }
     }
 
     private void TryActivatePortal()
@@ -101,11 +118,10 @@ public class ScenePortal : MonoBehaviour
         {
             ShowDialogueMessage(missingFollowerMessage);
             if (blockerWall != null)
-                blockerWall.SetActive(true); // mantém a barreira visível
+                blockerWall.SetActive(true);
             return;
         }
 
-        // ✅ Libera a barreira antes de mudar de cena
         if (blockerWall != null)
             blockerWall.SetActive(false);
 
@@ -141,8 +157,16 @@ public class ScenePortal : MonoBehaviour
 
     private void ShowDialogueMessage(string message)
     {
-        Debug.Log($"📢 Player: {message}");
-        // Substitua isso com um painel de mensagem ou sistema de diálogo real, se desejar
+        if (missingMessageUI != null && missingMessageText != null)
+        {
+            missingMessageText.text = message;
+            missingMessageUI.SetActive(true);
+            messageTimer = messageDuration;
+        }
+        else
+        {
+            Debug.Log($"📢 Player: {message}");
+        }
     }
 
 #if UNITY_EDITOR
